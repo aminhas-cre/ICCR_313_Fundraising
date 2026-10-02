@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #f6f1e7;
+  color: #1c2420;
+}
+
+.btn-primary {
+  @apply inline-flex cursor-pointer items-center justify-center rounded-full bg-emerald px-5 py-2.5 text-sm font-semibold text-sand shadow-sm transition hover:bg-emerald-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60;
+}
+
+.btn-secondary {
+  @apply inline-flex cursor-pointer items-center justify-center rounded-full border border-emerald px-5 py-2.5 text-sm font-semibold text-emerald transition hover:bg-emerald hover:text-sand focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald focus-visible:ring-offset-2;
+}
+
+.input {
+  @apply w-full rounded-lg border border-sand-dark bg-white px-3 py-2 text-sm text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald;
+}
