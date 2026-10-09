@@ -16,11 +16,6 @@ export function parseDonor(body: any, partial: boolean): Parsed {
     if (!Number.isInteger(t) || t < 1 || t > 100) return { error: "Tickets must be 1-100" };
     out.ticket_count = t;
   }
-  if ("status" in body) {
-    if (body.status !== "pledged" && body.status !== "paid") return { error: "Bad status" };
-    out.status = body.status;
-    out.paid_at = body.status === "paid" ? new Date().toISOString() : null;
-  }
   if ("referred_by" in body) out.referred_by = str(body.referred_by);
   if ("show_public" in body) out.show_public = Boolean(body.show_public);
   return { data: out };
