@@ -1,14 +1,16 @@
 import { getStats } from "@/lib/stats";
-import { GOAL_AMOUNT, GOAL_DONORS, TICKET_PRICE, ZELLE_EMAIL } from "@/lib/constants";
+import { getSettings } from "@/lib/settings";
 
 export const dynamic = "force-dynamic";
 
 const fmt = (n: number) => `$${n.toLocaleString("en-US")}`;
 
 export default async function Home() {
-  const s = await getStats();
-  const pct = Math.min(100, (s.paidTickets / GOAL_DONORS) * 100);
-  const pledgedPct = Math.min(100 - pct, (s.pledgedTickets / GOAL_DONORS) * 100);
+  const cfg = await getSettings();
+  const s = await getStats(cfg);
+  const GOAL_DONORS = cfg.goal_donors;
+  const pct = Math.min(100, (s.paidAmount / s.goalAmount) * 100);
+  const pledgedPct = Math.min(100 - pct, (s.pledgedAmount / s.goalAmount) * 100);
   const remaining = Math.max(0, GOAL_DONORS - s.paidTickets);
 
   return (
@@ -29,7 +31,7 @@ export default async function Home() {
           </div>
           <div className="text-right">
             <p className="font-serif text-2xl font-bold text-emerald">{fmt(s.paidAmount)}</p>
-            <p className="text-sm text-ink/70">of {fmt(GOAL_AMOUNT)}</p>
+            <p className="text-sm text-ink/70">of {fmt(s.goalAmount)}</p>
           </div>
         </div>
         <div
@@ -42,7 +44,7 @@ export default async function Home() {
         </div>
         <p className="mt-2 text-xs text-ink/70">
           <span className="mr-1 inline-block h-2 w-2 rounded-full bg-emerald" /> Paid{" "}
-          <span className="ml-3 mr-1 inline-block h-2 w-2 rounded-full bg-gold-light" /> Pledged ({s.pledgedTickets})
+          <span className="ml-3 mr-1 inline-block h-2 w-2 rounded-full bg-gold-light" /> Pledged ({fmt(s.pledgedAmount)})
         </p>
         <p className="mt-4 text-sm font-semibold text-emerald">
           {remaining > 0 ? `${remaining} spots left. Be one of the first.` : "We hit 313, Alhamdulillah. The 313 are the spark, not the ceiling."}
@@ -52,14 +54,14 @@ export default async function Home() {
       <section className="mt-8 rounded-2xl bg-emerald p-6 text-sand sm:p-8">
         <h2 className="font-serif text-2xl font-semibold">How it works</h2>
         <ol className="mt-3 list-decimal space-y-1 pl-5">
-          <li>Donate {fmt(TICKET_PRICE)}</li>
-          <li>Take a {fmt(TICKET_PRICE)} ticket</li>
+          <li>Donate {fmt(cfg.ticket_price)}</li>
+          <li>Take a {fmt(cfg.ticket_price)} ticket</li>
           <li>Reach out to others</li>
           <li>Take 5 tickets and bring 5 people</li>
         </ol>
         <p className="mt-5 text-sm text-sand/80">Zelle</p>
-        <p className="break-all font-semibold">{ZELLE_EMAIL}</p>
-        <p className="mt-1 text-xs text-sand/70">Put your name in the memo so we can confirm your ticket.</p>
+        <p className="break-all font-semibold">{cfg.zelle_email}</p>
+        {cfg.zelle_note && <p className="mt-1 text-xs text-sand/70">{cfg.zelle_note}</p>}
       </section>
 
       {s.leaders.length > 0 && (

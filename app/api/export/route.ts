@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { isAdmin } from "@/lib/auth";
 import { getSupabaseServerClient } from "@/lib/supabase";
+import { getSettings } from "@/lib/settings";
 import type { Donor } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -17,10 +18,11 @@ export async function GET() {
   const { data, error } = await getSupabaseServerClient().from("donors").select("*").order("created_at");
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   const donors = (data ?? []) as Donor[];
+  const { ticket_price } = await getSettings();
   const names = new Map(donors.map((d) => [d.id, d.full_name]));
   const header = ["Name", "Phone", "Email", "Tickets", "Amount", "Status", "Paid at", "Brought by", "Notes"];
   const lines = donors.map((d) =>
-    [d.full_name, d.phone, d.email, d.ticket_count, d.ticket_count * 250, d.status, d.paid_at,
+    [d.full_name, d.phone, d.email, d.ticket_count, d.ticket_count * ticket_price, d.status, d.paid_at,
       d.referred_by ? names.get(d.referred_by) : "", d.notes].map(cell).join(",")
   );
   return new NextResponse([header.map(cell).join(","), ...lines].join("\n"), {
