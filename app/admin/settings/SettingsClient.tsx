@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { buildReceipt } from "@/lib/receipt";
 
 type Form = {
   goal_donors: string;
@@ -9,6 +10,9 @@ type Form = {
   adjust_paid_amount: string;
   adjust_pledged_amount: string;
   adjust_note: string;
+  legal_name: string;
+  ein: string;
+  receipt_statement: string;
 };
 
 const money = (n: number) => `$${n.toLocaleString("en-US")}`;
@@ -31,6 +35,9 @@ export default function SettingsClient() {
         adjust_paid_amount: String(s.adjust_paid_amount),
         adjust_pledged_amount: String(s.adjust_pledged_amount),
         adjust_note: s.adjust_note ?? "",
+        legal_name: s.legal_name,
+        ein: s.ein,
+        receipt_statement: s.receipt_statement,
       });
     })();
   }, []);
@@ -92,6 +99,30 @@ export default function SettingsClient() {
           <h2 className="font-serif text-xl font-semibold text-emerald">Zelle details</h2>
           {field("zelle_email", "Zelle email", undefined, "email")}
           {field("zelle_note", "Memo note shown under it")}
+        </section>
+
+        <section className="space-y-4 rounded-2xl bg-white p-5 shadow-sm">
+          <h2 className="font-serif text-xl font-semibold text-emerald">Receipts</h2>
+          <p className="text-sm text-ink/70">
+            Shown only in the emailed receipt. These never appear on the public site.
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {field("legal_name", "Legal name")}
+            {field("ein", "EIN", "Format 12-3456789")}
+          </div>
+          <div>
+            <label htmlFor="receipt_statement" className="block text-sm font-semibold">Receipt statement</label>
+            <textarea id="receipt_statement" rows={4} className="input mt-1" value={f.receipt_statement}
+              onChange={(e) => setF({ ...f, receipt_statement: e.target.value })} />
+            <p className="mt-1 text-xs text-ink/60">You can use {"{legal_name}"} and {"{ein}"}. Have your tax preparer review this wording.</p>
+          </div>
+          <details className="rounded-xl bg-sand p-4 text-sm">
+            <summary className="cursor-pointer font-semibold text-emerald">Preview receipt</summary>
+            <pre className="mt-3 whitespace-pre-wrap font-sans">{buildReceipt({
+              name: "Sample Donor", ticket: "ICCR-0042", amount: 250, method: "zelle", received_on: new Date().toISOString().slice(0, 10),
+              legal_name: f.legal_name, ein: f.ein, receipt_statement: f.receipt_statement,
+            }).text}</pre>
+          </details>
         </section>
 
         <div className="flex items-center gap-3">
