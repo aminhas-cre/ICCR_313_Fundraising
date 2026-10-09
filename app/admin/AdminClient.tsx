@@ -2,7 +2,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Donor } from "@/lib/types";
 
-const TICKET = 250;
 const empty = { full_name: "", phone: "", email: "", ticket_count: 1, referred_by: "", status: "paid" };
 
 export default function AdminClient() {
@@ -10,6 +9,7 @@ export default function AdminClient() {
   const [form, setForm] = useState(empty);
   const [q, setQ] = useState("");
   const [msg, setMsg] = useState("");
+  const [cfg, setCfg] = useState({ goal_donors: 313, ticket_price: 250, adjust_paid_amount: 0 });
 
   const load = useCallback(async () => {
     const r = await fetch("/api/donors");
@@ -17,9 +17,14 @@ export default function AdminClient() {
     setDonors((await r.json()).donors ?? []);
   }, []);
   useEffect(() => { load(); }, [load]);
+  useEffect(() => {
+    fetch("/api/settings").then((r) => (r.ok ? r.json() : null)).then((j) => j && setCfg(j.settings));
+  }, []);
 
   const names = useMemo(() => new Map(donors.map((d) => [d.id, d.full_name])), [donors]);
-  const paid = donors.filter((d) => d.status === "paid").reduce((n, d) => n + d.ticket_count, 0);
+  const paidDonorTickets = donors.filter((d) => d.status === "paid").reduce((n, d) => n + d.ticket_count, 0);
+  const paidAmount = paidDonorTickets * cfg.ticket_price + cfg.adjust_paid_amount;
+  const paid = Math.floor(paidAmount / cfg.ticket_price);
   const pledged = donors.filter((d) => d.status === "pledged").reduce((n, d) => n + d.ticket_count, 0);
   const shown = donors.filter((d) => d.full_name.toLowerCase().includes(q.toLowerCase()));
 
@@ -50,6 +55,7 @@ export default function AdminClient() {
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h1 className="font-serif text-3xl font-bold text-emerald">313 Admin</h1>
         <div className="flex gap-2">
+          <a className="btn-secondary" href="/admin/settings">Settings</a>
           <a className="btn-secondary" href="/">Public page</a>
           <a className="btn-secondary" href="/api/export">Export CSV</a>
           <button className="btn-secondary" onClick={logout}>Sign out</button>
@@ -57,7 +63,7 @@ export default function AdminClient() {
       </div>
 
       <p className="mt-3 text-sm">
-        <b>{paid}</b> paid (${(paid * TICKET).toLocaleString()}) · <b>{pledged}</b> pledged · <b>{313 - paid}</b> to go
+        <b>{paid}</b> paid (${paidAmount.toLocaleString()}) · <b>{pledged}</b> pledged · <b>{Math.max(0, cfg.goal_donors - paid)}</b> to go
       </p>
 
       <form onSubmit={add} className="mt-6 grid gap-3 rounded-2xl bg-white p-4 shadow-sm sm:grid-cols-6">

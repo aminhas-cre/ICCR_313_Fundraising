@@ -1,12 +1,12 @@
 import { getSupabaseServerClient } from "./supabase";
-import { TICKET_PRICE } from "./constants";
+import type { Settings } from "./settings";
 
 export interface Stats {
-  paidTickets: number;
-  pledgedTickets: number;
   paidAmount: number;
   pledgedAmount: number;
-  paidDonors: number;
+  goalAmount: number;
+  paidTickets: number; // ticket-equivalents, floor(amount / price)
+  pledgedTickets: number;
   leaders: { name: string; brought: number }[];
 }
 
@@ -16,22 +16,21 @@ function shortName(full: string) {
   return parts.length > 1 ? `${parts[0]} ${parts[parts.length - 1][0]}.` : parts[0];
 }
 
-export async function getStats(): Promise<Stats> {
+export async function getStats(s: Settings): Promise<Stats> {
   const { data, error } = await getSupabaseServerClient()
     .from("donors")
     .select("id, full_name, ticket_count, status, referred_by, show_public");
   if (error) throw error;
   const rows = data ?? [];
 
-  let paidTickets = 0, pledgedTickets = 0, paidDonors = 0;
+  let paidDonorTickets = 0, pledgedDonorTickets = 0;
   const brought = new Map<string, number>();
   for (const r of rows) {
     if (r.status === "paid") {
-      paidTickets += r.ticket_count;
-      paidDonors += 1;
+      paidDonorTickets += r.ticket_count;
       if (r.referred_by) brought.set(r.referred_by, (brought.get(r.referred_by) ?? 0) + 1);
     } else {
-      pledgedTickets += r.ticket_count;
+      pledgedDonorTickets += r.ticket_count;
     }
   }
   const byId = new Map(rows.map((r) => [r.id, r]));
@@ -42,12 +41,14 @@ export async function getStats(): Promise<Stats> {
     .slice(0, 5)
     .map((x) => ({ name: shortName(x.d!.full_name), brought: x.n }));
 
+  const paidAmount = paidDonorTickets * s.ticket_price + s.adjust_paid_amount;
+  const pledgedAmount = pledgedDonorTickets * s.ticket_price + s.adjust_pledged_amount;
   return {
-    paidTickets,
-    pledgedTickets,
-    paidAmount: paidTickets * TICKET_PRICE,
-    pledgedAmount: pledgedTickets * TICKET_PRICE,
-    paidDonors,
+    paidAmount,
+    pledgedAmount,
+    goalAmount: s.goal_donors * s.ticket_price,
+    paidTickets: Math.floor(paidAmount / s.ticket_price),
+    pledgedTickets: Math.floor(pledgedAmount / s.ticket_price),
     leaders,
   };
 }
