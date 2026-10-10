@@ -13,6 +13,7 @@ export interface Settings {
   legal_name: string;
   ein: string;
   receipt_statement: string;
+  admin_notify_email: string;
 }
 
 export const DEFAULT_RECEIPT_STATEMENT =
@@ -29,6 +30,7 @@ export const DEFAULT_SETTINGS: Settings = {
   legal_name: "Islamic Center of Castle Rock",
   ein: "99-2085129",
   receipt_statement: DEFAULT_RECEIPT_STATEMENT,
+  admin_notify_email: "islamiccentercastlerock@gmail.com",
 };
 
 // Never throws: the public page must keep rendering even if the row is missing.
@@ -36,7 +38,7 @@ export async function getSettings(): Promise<Settings> {
   try {
     const { data } = await getSupabaseServerClient()
       .from("campaign_settings")
-      .select("goal_donors, ticket_price, zelle_email, zelle_note, adjust_paid_amount, adjust_pledged_amount, adjust_note, legal_name, ein, receipt_statement")
+      .select("goal_donors, ticket_price, zelle_email, zelle_note, adjust_paid_amount, adjust_pledged_amount, adjust_note, legal_name, ein, receipt_statement, admin_notify_email")
       .eq("id", 1)
       .maybeSingle();
     return data ? { ...DEFAULT_SETTINGS, ...data } : DEFAULT_SETTINGS;
@@ -66,6 +68,8 @@ export function parseSettings(body: any): { data: Settings } | { error: string }
   if (!/^\d{2}-\d{7}$/.test(ein)) return { error: "EIN must look like 12-3456789" };
   const statement = typeof body.receipt_statement === "string" ? body.receipt_statement.trim() : "";
   if (!statement || statement.length > 600) return { error: "Receipt statement is required (up to 600 characters)" };
+  const notify = typeof body.admin_notify_email === "string" ? body.admin_notify_email.trim() : "";
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(notify)) return { error: "Enter a valid email for pledge alerts" };
   const clip = (v: unknown, n: number) => (typeof v === "string" ? v.trim().slice(0, n) : "");
 
   return {
@@ -80,6 +84,7 @@ export function parseSettings(body: any): { data: Settings } | { error: string }
       legal_name: legalName,
       ein,
       receipt_statement: statement,
+      admin_notify_email: notify,
     },
   };
 }

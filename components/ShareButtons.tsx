@@ -1,19 +1,18 @@
 "use client";
 import { useState } from "react";
 
-export default function ShareButtons({ refCode, text }: { refCode?: string; text?: string }) {
+// Shares the plain campaign link (no per-person tracking).
+export default function ShareButtons({ text }: { text?: string }) {
   const [copied, setCopied] = useState(false);
-  const link = () =>
-    `${window.location.origin}/pledge${refCode ? `?ref=${encodeURIComponent(refCode)}` : ""}`;
   const message = text ?? "Join me in the 313: founding supporters building our masjid at Islamic Center of Castle Rock.";
 
   async function copy() {
     try {
-      await navigator.clipboard.writeText(link());
+      await navigator.clipboard.writeText(window.location.origin);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      window.prompt("Copy this link:", link());
+      window.prompt("Copy this link:", window.location.origin);
     }
   }
 
@@ -24,7 +23,7 @@ export default function ShareButtons({ refCode, text }: { refCode?: string; text
         target="_blank"
         rel="noreferrer"
         onClick={(e) => {
-          e.currentTarget.href = `https://wa.me/?text=${encodeURIComponent(`${message} ${link()}`)}`;
+          e.currentTarget.href = `https://wa.me/?text=${encodeURIComponent(`${message} ${window.location.origin}`)}`;
         }}
         href="https://wa.me/"
       >
