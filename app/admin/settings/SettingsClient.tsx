@@ -13,6 +13,7 @@ type Form = {
   legal_name: string;
   ein: string;
   receipt_statement: string;
+  admin_notify_email: string;
 };
 
 const money = (n: number) => `$${n.toLocaleString("en-US")}`;
@@ -21,12 +22,14 @@ export default function SettingsClient() {
   const [f, setF] = useState<Form | null>(null);
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [saving, setSaving] = useState(false);
+  const [emailOn, setEmailOn] = useState<boolean | null>(null);
 
   useEffect(() => {
     (async () => {
       const r = await fetch("/api/settings");
       if (r.status === 401) return (window.location.href = "/admin/login");
-      const { settings: s } = await r.json();
+      const { settings: s, email_configured } = await r.json();
+      setEmailOn(email_configured);
       setF({
         goal_donors: String(s.goal_donors),
         ticket_price: String(s.ticket_price),
@@ -38,6 +41,7 @@ export default function SettingsClient() {
         legal_name: s.legal_name,
         ein: s.ein,
         receipt_statement: s.receipt_statement,
+        admin_notify_email: s.admin_notify_email,
       });
     })();
   }, []);
@@ -102,6 +106,16 @@ export default function SettingsClient() {
         </section>
 
         <section className="space-y-4 rounded-2xl bg-white p-5 shadow-sm">
+          <h2 className="font-serif text-xl font-semibold text-emerald">Email</h2>
+          <p className="text-sm">
+            Status:{" "}
+            <b className={emailOn ? "text-emerald" : "text-red-700"}>{emailOn === null ? "checking…" : emailOn ? "configured" : "not configured yet"}</b>
+            {emailOn === false && <span className="text-ink/70"> (add RESEND_API_KEY and EMAIL_FROM in Vercel to turn on confirmations, alerts and receipts)</span>}
+          </p>
+          {field("admin_notify_email", "Send an alert to this address on every new pledge", undefined, "email")}
+        </section>
+
+        <section className="space-y-4 rounded-2xl bg-white p-5 shadow-sm">
           <h2 className="font-serif text-xl font-semibold text-emerald">Receipts</h2>
           <p className="text-sm text-ink/70">
             Shown only in the emailed receipt. These never appear on the public site.
@@ -119,7 +133,7 @@ export default function SettingsClient() {
           <details className="rounded-xl bg-sand p-4 text-sm">
             <summary className="cursor-pointer font-semibold text-emerald">Preview receipt</summary>
             <pre className="mt-3 whitespace-pre-wrap font-sans">{buildReceipt({
-              name: "Sample Donor", ticket: "ICCR-0042", amount: 250, method: "zelle", received_on: new Date().toISOString().slice(0, 10),
+              name: "Sample Donor", tickets: ["ICCR-2", "ICCR-3"], amount: 500, method: "zelle", received_on: new Date().toISOString().slice(0, 10),
               legal_name: f.legal_name, ein: f.ein, receipt_statement: f.receipt_statement,
             }).text}</pre>
           </details>

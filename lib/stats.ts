@@ -2,72 +2,64 @@ import { getSupabaseServerClient } from "./supabase";
 import type { Settings } from "./settings";
 
 export interface Stats {
-  paidAmount: number;
-  pledgedAmount: number; // still outstanding
+  goalTickets: number;
   goalAmount: number;
-  paidTickets: number; // ticket-equivalents, floor(amount / price)
-  pledgedTickets: number;
-  leaders: { name: string; brought: number }[];
-  supporters: { name: string; tickets: number; paid: boolean }[];
+  issued: number; // ticket numbers handed out so far
+  numbersLeft: number;
+  pledgedTickets: number; // everything pledged, paid or not
+  paidTickets: number;
+  pledgedAmount: number; // includes paid
+  paidAmount: number;
+  supporters: { name: string; count: number }[];
 }
 
 // Public-safe: only first name + last initial ever leave this function.
-function shortName(full: string) {
+export function shortName(full: string) {
   const parts = full.trim().split(/\s+/);
   return parts.length > 1 ? `${parts[0]} ${parts[parts.length - 1][0]}.` : parts[0];
 }
 
 export async function getStats(s: Settings): Promise<Stats> {
   const sb = getSupabaseServerClient();
-  const [d, p] = await Promise.all([
-    sb
-      .from("donors")
-      .select("id, full_name, ticket_count, referred_by, show_public, created_at")
-      .order("created_at", { ascending: false }),
-    sb.from("payments").select("donor_id, amount").is("voided_at", null),
+  const [t, d] = await Promise.all([
+    sb.from("tickets").select("donor_id, paid, created_at"),
+    sb.from("donors").select("id, full_name, show_public"),
   ]);
+  if (t.error) throw t.error;
   if (d.error) throw d.error;
-  if (p.error) throw p.error;
-  const rows = d.data ?? [];
+  const tickets = t.data ?? [];
 
-  const received = new Map<string, number>();
-  for (const x of p.data ?? []) received.set(x.donor_id, (received.get(x.donor_id) ?? 0) + x.amount);
+  const issued = tickets.length;
+  const paidCount = tickets.filter((x) => x.paid).length;
 
-  let paidTotal = 0, outstanding = 0;
-  const fullyPaid = new Set<string>();
-  const brought = new Map<string, number>();
-  for (const r of rows) {
-    const due = r.ticket_count * s.ticket_price;
-    const got = received.get(r.id) ?? 0;
-    paidTotal += got;
-    outstanding += Math.max(0, due - got);
-    if (got >= due) {
-      fullyPaid.add(r.id);
-      if (r.referred_by) brought.set(r.referred_by, (brought.get(r.referred_by) ?? 0) + 1);
-    }
+  // Offline adjustments (cash, etc.) count toward both thermometers.
+  const paidAmount = paidCount * s.ticket_price + s.adjust_paid_amount;
+  const pledgedAmount = issued * s.ticket_price + s.adjust_paid_amount + s.adjust_pledged_amount;
+
+  const by = new Map<string, { count: number; latest: string }>();
+  for (const x of tickets) {
+    const cur = by.get(x.donor_id) ?? { count: 0, latest: "" };
+    cur.count += 1;
+    if (x.created_at > cur.latest) cur.latest = x.created_at;
+    by.set(x.donor_id, cur);
   }
-  const byId = new Map(rows.map((r) => [r.id, r]));
-  const leaders = [...brought.entries()]
-    .map(([id, n]) => ({ d: byId.get(id), n }))
-    .filter((x) => x.d && x.d.show_public)
-    .sort((a, b) => b.n - a.n)
-    .slice(0, 5)
-    .map((x) => ({ name: shortName(x.d!.full_name), brought: x.n }));
+  const donors = new Map((d.data ?? []).map((r) => [r.id, r]));
+  const supporters = [...by.entries()]
+    .sort((a, b) => (a[1].latest < b[1].latest ? 1 : -1))
+    .map(([id, v]) => {
+      const dn = donors.get(id);
+      return { name: dn && dn.show_public ? shortName(dn.full_name) : "Anonymous", count: v.count };
+    });
 
-  const supporters = rows
-    .filter((r) => r.show_public)
-    .slice(0, 8)
-    .map((r) => ({ name: shortName(r.full_name), tickets: r.ticket_count, paid: fullyPaid.has(r.id) }));
-
-  const paidAmount = paidTotal + s.adjust_paid_amount;
-  const pledgedAmount = outstanding + s.adjust_pledged_amount;
   return {
-    paidAmount,
-    pledgedAmount,
+    goalTickets: s.goal_donors,
     goalAmount: s.goal_donors * s.ticket_price,
-    paidTickets: Math.floor(paidAmount / s.ticket_price),
+    issued,
+    numbersLeft: Math.max(0, s.goal_donors - issued),
     pledgedTickets: Math.floor(pledgedAmount / s.ticket_price),
-    leaders,
+    paidTickets: Math.floor(paidAmount / s.ticket_price),
+    pledgedAmount,
+    paidAmount,
     supporters,
   };
 }

@@ -3,4 +3,4 @@
 export const TICKET_PRICE = 250;
 export const GOAL_DONORS = 313;
 export const ZELLE_EMAIL = "islamiccentercastlerock@gmail.com";
-export const ZELLE_NOTE = "Put your name in the memo so we can confirm your ticket.";
+export const ZELLE_NOTE = "Put the ticket number (like ICCR-2) in the memo so we can match your payment.";

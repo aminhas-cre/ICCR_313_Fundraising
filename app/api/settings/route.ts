@@ -2,12 +2,13 @@ import { NextResponse } from "next/server";
 import { isAdmin } from "@/lib/auth";
 import { getSupabaseServerClient } from "@/lib/supabase";
 import { getSettings, parseSettings } from "@/lib/settings";
+import { emailConfigured } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   if (!isAdmin()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  return NextResponse.json({ settings: await getSettings() });
+  return NextResponse.json({ settings: await getSettings(), email_configured: emailConfigured() });
 }
 
 export async function PUT(req: Request) {
