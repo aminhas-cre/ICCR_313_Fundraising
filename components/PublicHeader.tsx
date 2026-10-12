@@ -1,9 +1,9 @@
 import Link from "next/link";
 
-export default function PublicHeader() {
+export default function PublicHeader({ wide = false }: { wide?: boolean }) {
   return (
     <header className="border-b border-sand-dark bg-sand/90">
-      <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-3">
+      <div className={`mx-auto flex items-center justify-between px-4 py-3 ${wide ? "max-w-6xl" : "max-w-3xl"}`}>
         <Link href="/" className="font-serif text-lg font-bold text-emerald focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald">
           ICCR <span className="text-gold-ink">313</span>
         </Link>
