@@ -5,6 +5,7 @@ import ShareButtons from "@/components/ShareButtons";
 import { formatTicket } from "@/lib/tickets";
 
 interface Done {
+  card_enabled?: boolean;
   tickets: number[];
   all_tickets: number[];
   due: number;
@@ -15,9 +16,10 @@ interface Done {
 
 const money = (n: number) => `$${n.toLocaleString("en-US")}`;
 
-export default function PledgeForm({ price, zelle, left, payNow }: { price: number; zelle: string; left: number; payNow: boolean }) {
+export default function PledgeForm({ price, zelle, left, mode, initialCount }: { price: number; zelle: string; left: number; mode: "self" | "others" | "default"; initialCount: number }) {
+  const payNow = mode === "self";
   const max = Math.min(left, 50);
-  const [f, setF] = useState({ full_name: "", email: "", phone: "", ticket_count: 1, show_public: true, website: "" });
+  const [f, setF] = useState({ full_name: "", email: "", phone: "", ticket_count: initialCount, show_public: true, website: "" });
   const [err, setErr] = useState("");
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState<Done | null>(null);
@@ -37,18 +39,49 @@ export default function PledgeForm({ price, zelle, left, payNow }: { price: numb
 
   if (done) {
     const example = done.tickets[1] ?? done.tickets[0];
+    const nums = done.tickets.join(",");
     const payBlock = (
       <section className={`rounded-2xl p-6 ${payNow ? "bg-emerald text-sand" : "bg-white shadow-sm"}`} aria-label="How to pay">
         <h2 className="font-serif text-xl font-semibold">{payNow ? `Pay now: ${money(done.due)}` : "When you're ready to pay"}</h2>
-        <ol className={`mt-3 list-decimal space-y-1 pl-5 text-sm ${payNow ? "" : "text-ink/90"}`}>
-          <li>Send by Zelle to <b className="break-all">{done.zelle_email}</b></li>
+        {done.card_enabled && (
+          <a
+            href={`/pay?t=${nums}`}
+            className={`mt-3 inline-flex min-h-[44px] w-full items-center justify-center rounded-full px-5 py-3 text-sm font-semibold ${
+              payNow ? "bg-sand text-emerald hover:bg-white" : "bg-emerald text-sand hover:bg-emerald-dark"
+            }`}
+          >
+            Pay by card, Apple Pay or Google Pay
+          </a>
+        )}
+        <p className={`mt-3 text-sm font-semibold ${payNow ? "" : "text-ink/90"}`}>{done.card_enabled ? "Or pay by Zelle:" : "Pay by Zelle:"}</p>
+        <ol className={`mt-1 list-decimal space-y-1 pl-5 text-sm ${payNow ? "" : "text-ink/90"}`}>
+          <li>Send to <b className="break-all">{done.zelle_email}</b></li>
           <li>
             Put the <b>ticket number</b> in the memo, for example <b>{formatTicket(done.tickets[0])}</b>. Several tickets in one payment? List them all.
           </li>
         </ol>
-        {payNow && <p className="mt-3 text-xs text-sand/80">Card, Apple Pay and Google Pay are coming soon.</p>}
       </section>
     );
+    const nudge =
+      mode === "others" ? (
+        <section className="rounded-2xl border-2 border-emerald bg-white p-5 shadow-sm">
+          <h2 className="font-serif text-xl font-semibold text-emerald">Send each person their number</h2>
+          <p className="mt-1 text-sm text-ink/80">
+            Give each of your family and friends one ticket number from above. They pay that exact ticket, so tell them to
+            put the number in the Zelle memo{done.card_enabled ? " or use the pay link" : ""}.
+          </p>
+          <a className="btn-secondary mt-3 w-full" href="/pledge?pay=1">Pay for my own ticket too</a>
+        </section>
+      ) : (
+        <section className="rounded-2xl border-2 border-emerald bg-white p-5 shadow-sm">
+          <h2 className="font-serif text-xl font-semibold text-emerald">Now bring your close ones</h2>
+          <p className="mt-1 text-sm text-ink/80">
+            You&apos;ve taken care of yours. The most helpful thing you can do next is pledge tickets for your family and
+            friends and send each person their ICCR number. Highly recommended.
+          </p>
+          <a className="btn-primary mt-3 w-full" href="/pledge?for=others">Pledge for family &amp; friends</a>
+        </section>
+      );
     return (
       <div className="mt-6 space-y-5">
         <section className="rounded-2xl bg-white p-6 shadow-sm" aria-live="polite">
@@ -69,6 +102,7 @@ export default function PledgeForm({ price, zelle, left, payNow }: { price: numb
           {done.emailed && <p className="mt-3 text-xs text-ink/70">We&apos;ve emailed you a confirmation with these numbers.</p>}
         </section>
         {payBlock}
+        {nudge}
         <Link className="btn-secondary w-full" href="/status">Check my pledge</Link>
         <section className="rounded-2xl bg-white p-5 shadow-sm">
           <h2 className="font-serif text-xl font-semibold text-emerald">Share with family and friends</h2>

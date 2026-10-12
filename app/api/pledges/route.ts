@@ -4,6 +4,7 @@ import { getSettings } from "@/lib/settings";
 import { isLimited } from "@/lib/rateLimit";
 import { sendEmail, siteUrl } from "@/lib/email";
 import { adminPledgeAlert, pledgeConfirmation } from "@/lib/emailTemplates";
+import { stripeConfigured } from "@/lib/stripe";
 
 export const dynamic = "force-dynamic";
 const MAX_PER_PLEDGE = 50;
@@ -72,6 +73,8 @@ export async function POST(req: Request) {
     zelleEmail: cfg.zelle_email,
     statusUrl: `${base}/status`,
     shareUrl: base || "/",
+    familyUrl: `${base}/pledge?for=others`,
+    payUrl: stripeConfigured() ? `${base}/pay?t=${newTickets.join(",")}` : null,
   });
   const alert = adminPledgeAlert({
     name: donor.full_name,
@@ -95,5 +98,6 @@ export async function POST(req: Request) {
     price: cfg.ticket_price,
     zelle_email: cfg.zelle_email,
     emailed: toDonor.ok,
+    card_enabled: stripeConfigured(),
   });
 }

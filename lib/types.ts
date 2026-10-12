@@ -44,4 +44,5 @@ export interface PledgeView {
   zelle_email: string;
   ticket_price: number;
   tickets: PledgeTicket[];
+  card_enabled: boolean;
 }

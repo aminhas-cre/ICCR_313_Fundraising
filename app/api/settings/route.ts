@@ -3,12 +3,13 @@ import { isAdmin } from "@/lib/auth";
 import { getSupabaseServerClient } from "@/lib/supabase";
 import { getSettings, parseSettings } from "@/lib/settings";
 import { emailConfigured } from "@/lib/email";
+import { stripeConfigured } from "@/lib/stripe";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   if (!isAdmin()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  return NextResponse.json({ settings: await getSettings(), email_configured: emailConfigured() });
+  return NextResponse.json({ settings: await getSettings(), email_configured: emailConfigured(), stripe_configured: stripeConfigured() });
 }
 
 export async function PUT(req: Request) {
