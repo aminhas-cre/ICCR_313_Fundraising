@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import PublicHeader from "@/components/PublicHeader";
 import ShareButtons from "@/components/ShareButtons";
@@ -30,7 +31,7 @@ export default async function Home() {
 
   const hero = (
     <section className="py-10 text-center sm:py-14">
-      <p className="text-sm font-semibold uppercase tracking-widest text-gold-ink">Islamic Center of Castle Rock</p>
+      <Image src="/logo.png" alt="Islamic Center of Castle Rock (ICCR) logo" width={360} height={478} priority className="mx-auto h-auto w-32 sm:w-36" />
       <h1 className="mt-2 font-serif text-6xl font-bold text-emerald sm:text-7xl">313</h1>
       <p className="mx-auto mt-2 max-w-xl font-serif text-2xl leading-snug text-emerald sm:text-3xl">
         Support Your Castle Rock Muslim Community Center
