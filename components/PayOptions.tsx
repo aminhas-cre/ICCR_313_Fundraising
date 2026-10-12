@@ -10,20 +10,24 @@ export default function PayOptions({
   venmo,
   tone = "light",
   example,
+  show = "both",
 }: {
   zelle: string;
   venmo: string;
   tone?: "light" | "dark";
   example?: string;
+  show?: "zelle" | "venmo" | "both";
 }) {
   const dark = tone === "dark";
+  const showZelle = show !== "venmo";
+  const showVenmo = show !== "zelle" && !!venmo;
   return (
     <div className="text-sm">
       <ul className="space-y-2">
-        <li>
+        {showZelle && <li>
           <b>Zelle:</b> <span className="break-all font-semibold">{zelle}</span>
-        </li>
-        {venmo && (
+        </li>}
+        {showVenmo && (
           <li>
             <b>Venmo:</b>{" "}
             <a
@@ -37,7 +41,7 @@ export default function PayOptions({
           </li>
         )}
       </ul>
-      {venmo && hasQr(venmo) && (
+      {showVenmo && hasQr(venmo) && (
         <details className="mt-1">
           <summary className={`inline-flex min-h-[44px] cursor-pointer items-center font-semibold underline ${dark ? "text-sand" : "text-emerald"}`}>
             Show Venmo QR code
@@ -53,7 +57,7 @@ export default function PayOptions({
         </details>
       )}
       <p className={`mt-2 ${dark ? "" : "text-ink/90"}`}>
-        Put the <b>ticket number</b> in the Zelle memo{venmo ? " or Venmo note" : ""}
+        Put the <b>ticket number</b> in the {show === "zelle" ? "Zelle memo" : show === "venmo" ? "Venmo note" : venmo ? "Zelle memo or Venmo note" : "Zelle memo"}
         {example ? <>, for example <b>{example}</b></> : ""}. Several tickets in one payment? List them all.
       </p>
     </div>

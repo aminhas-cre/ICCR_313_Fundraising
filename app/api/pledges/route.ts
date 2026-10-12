@@ -5,6 +5,7 @@ import { isLimited } from "@/lib/rateLimit";
 import { sendEmail, siteUrl } from "@/lib/email";
 import { adminPledgeAlert, pledgeConfirmation } from "@/lib/emailTemplates";
 import { stripeConfigured } from "@/lib/stripe";
+import { CHOICE_LABELS, cleanChoices } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 const MAX_PER_PLEDGE = 50;
@@ -27,6 +28,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: `Choose between 1 and ${MAX_PER_PLEDGE} tickets.` }, { status: 400 });
   }
 
+  const chosen = cleanChoices(body.pay_methods);
   const sb = getSupabaseServerClient();
   const cfg = await getSettings();
 
@@ -57,6 +59,13 @@ export async function POST(req: Request) {
   }
   const newTickets = (nums as number[]).slice().sort((a, b) => a - b);
 
+  // Remember what they said they would use (intent; the committee still records what actually arrives).
+  if (chosen.length) {
+    const up = await sb.from("tickets").update({ chosen_methods: chosen }).in("ticket_no", newTickets);
+    if (up.error) console.error("could not save chosen_methods", up.error.message);
+  }
+  const chosenLabels = chosen.map((m) => CHOICE_LABELS[m]);
+
   const [{ data: mine }, { count: issued }] = await Promise.all([
     sb.from("tickets").select("ticket_no").eq("donor_id", donor.id).order("ticket_no"),
     sb.from("tickets").select("ticket_no", { count: "exact", head: true }),
@@ -73,6 +82,7 @@ export async function POST(req: Request) {
     zelleEmail: cfg.zelle_email,
     venmoHandle: cfg.venmo_handle,
     launchgoodUrl: cfg.launchgood_url,
+    chosenMethods: chosenLabels,
     statusUrl: `${base}/status`,
     shareUrl: base || "/",
     familyUrl: `${base}/pledge?for=others`,
@@ -87,6 +97,7 @@ export async function POST(req: Request) {
     pledgedSoFar: issued ?? allTickets.length,
     goal: cfg.goal_donors,
     adminUrl: `${base}/admin/tickets`,
+    chosenMethods: chosenLabels,
   });
   const [toDonor] = await Promise.all([
     sendEmail({ to: email, ...confirm }),

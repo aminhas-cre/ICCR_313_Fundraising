@@ -2,7 +2,6 @@ import PublicHeader from "@/components/PublicHeader";
 import { getSettings } from "@/lib/settings";
 import { getSupabaseServerClient } from "@/lib/supabase";
 import PledgeForm from "./PledgeForm";
-import WaysToPay from "@/components/WaysToPay";
 import { stripeConfigured } from "@/lib/stripe";
 
 export const dynamic = "force-dynamic";
@@ -46,13 +45,12 @@ export default async function PledgePage({ searchParams }: { searchParams: { pay
                 first, then pledge tickets for your family and friends.
               </p>
             )}
-            {mode !== "others" && (
-              <WaysToPay zelle={cfg.zelle_email} venmo={cfg.venmo_handle} launchgood={cfg.launchgood_url} cardEnabled={stripeConfigured()} price={cfg.ticket_price} />
-            )}
             <PledgeForm
               price={cfg.ticket_price}
               zelle={cfg.zelle_email}
               venmo={cfg.venmo_handle}
+              launchgood={cfg.launchgood_url}
+              cardEnabled={stripeConfigured()}
               left={left}
               mode={mode}
               initialCount={mode === "others" ? Math.min(4, left) : 1}

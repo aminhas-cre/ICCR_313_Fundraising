@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { PAYMENT_METHODS } from "@/lib/types";
+import { PAYMENT_METHODS, CHOICE_METHODS, CHOICE_LABELS } from "@/lib/types";
 import { formatTicket, parseTicketList } from "@/lib/tickets";
 
 interface Row {
@@ -8,6 +8,7 @@ interface Row {
   paid: boolean;
   received_on: string | null;
   pay_method: string | null;
+  chosen_methods: string[] | null;
   bank_memo: string | null;
   passed_on: boolean;
   passed_to: string | null;
@@ -140,7 +141,13 @@ export default function TicketsClient() {
         </div>
       </section>
 
-      <div className="mt-8 flex flex-wrap items-center gap-2">
+      <p className="mt-8 rounded-xl bg-white p-3 text-sm shadow-sm" aria-label="Payment plans summary">
+        <b>Plans to pay by</b> (tickets):{" "}
+        {CHOICE_METHODS.map((m) => `${CHOICE_LABELS[m]} ${rows.filter((r) => (r.chosen_methods ?? []).includes(m)).length}`).join(" · ")}
+        {" · "}no choice {rows.filter((r) => !(r.chosen_methods ?? []).length).length}
+      </p>
+
+      <div className="mt-3 flex flex-wrap items-center gap-2">
         {(["unpaid", "paid", "all"] as Filter[]).map((f) => (
           <button key={f} onClick={() => setFilter(f)} aria-pressed={filter === f}
             className={`rounded-full px-4 py-2 text-sm font-semibold capitalize ${filter === f ? "bg-emerald text-sand" : "bg-white text-emerald shadow-sm"}`}>
@@ -153,7 +160,7 @@ export default function TicketsClient() {
       <div className="mt-3 overflow-x-auto rounded-2xl bg-white shadow-sm">
         <table className="w-full text-left text-sm">
           <thead className="bg-sand-dark text-xs uppercase">
-            <tr><th className="p-3">Ticket</th><th>Pledger</th><th>Status</th><th>Received</th><th>Bank memo</th><th>Passed to</th><th></th></tr>
+            <tr><th className="p-3">Ticket</th><th>Pledger</th><th>Status</th><th>Plans to pay by</th><th>Received</th><th>Bank memo</th><th>Passed to</th><th></th></tr>
           </thead>
           <tbody>
             {shown.map((r) => (
@@ -163,6 +170,7 @@ export default function TicketsClient() {
                 <td>
                   <span className={`rounded-full px-3 py-1 text-xs font-semibold ${r.paid ? "bg-emerald text-sand" : "bg-sand-dark text-ink"}`}>{r.paid ? "Paid" : "Pledged"}</span>
                 </td>
+                <td className="text-xs capitalize">{(r.chosen_methods ?? []).join(" + ") || <span className="text-ink/40">none</span>}</td>
                 <td className="whitespace-nowrap text-xs">{r.received_on}{r.pay_method ? ` · ${r.pay_method}` : ""}</td>
                 <td className="text-xs">{r.bank_memo}</td>
                 <td className="text-xs">{r.passed_on ? r.passed_to || "yes" : ""}</td>
@@ -173,7 +181,7 @@ export default function TicketsClient() {
                 </td>
               </tr>
             ))}
-            {shown.length === 0 && <tr><td className="p-4 text-ink/60" colSpan={7}>{rows.length === 0 ? "No tickets yet." : "Nothing matches."}</td></tr>}
+            {shown.length === 0 && <tr><td className="p-4 text-ink/60" colSpan={8}>{rows.length === 0 ? "No tickets yet." : "Nothing matches."}</td></tr>}
           </tbody>
         </table>
       </div>
