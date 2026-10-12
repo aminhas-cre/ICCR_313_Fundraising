@@ -2,6 +2,8 @@ import PublicHeader from "@/components/PublicHeader";
 import { getSettings } from "@/lib/settings";
 import { getSupabaseServerClient } from "@/lib/supabase";
 import PledgeForm from "./PledgeForm";
+import WaysToPay from "@/components/WaysToPay";
+import { stripeConfigured } from "@/lib/stripe";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Make a pledge | ICCR 313" };
@@ -43,6 +45,9 @@ export default async function PledgePage({ searchParams }: { searchParams: { pay
                 Choose how many tickets you&apos;d like. Each is ${cfg.ticket_price} and gets its own ICCR number. Pay for your own
                 first, then pledge tickets for your family and friends.
               </p>
+            )}
+            {mode !== "others" && (
+              <WaysToPay zelle={cfg.zelle_email} venmo={cfg.venmo_handle} cardEnabled={stripeConfigured()} price={cfg.ticket_price} />
             )}
             <PledgeForm
               price={cfg.ticket_price}
