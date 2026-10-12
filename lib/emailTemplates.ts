@@ -15,6 +15,7 @@ export interface PledgeMailInput {
   allTickets: number[]; // everything this person holds, including the new ones
   price: number;
   zelleEmail: string;
+  venmoHandle: string;
   statusUrl: string;
   shareUrl: string;
   familyUrl: string;
@@ -36,10 +37,10 @@ export function pledgeConfirmation(i: PledgeMailInput) {
     `Just added: ${list(i.newTickets)} (${money(i.newTickets.length * i.price)})`,
     "",
     "EVERY TICKET HAS ITS OWN NUMBER",
-    `Each ticket is ${money(i.price)} and is tracked by its own ICCR number. When a ticket is paid, the person paying puts that ticket's number in the Zelle memo.`,
-    `Example: if you give your uncle ticket ${formatTicket(example)}, he sends ${money(i.price)} by Zelle with "${formatTicket(example)}" in the memo, and that exact ticket is marked paid.`,
+    `Each ticket is ${money(i.price)} and is tracked by its own ICCR number. When a ticket is paid, the person paying puts that ticket's number in the Zelle memo or Venmo note.`,
+    `Example: if you give your uncle ticket ${formatTicket(example)}, he sends ${money(i.price)} by Zelle or Venmo with "${formatTicket(example)}" in the memo, and that exact ticket is marked paid.`,
     "",
-    `HOW TO PAY: Zelle to ${i.zelleEmail} and put the ticket number in the memo.`,
+    `HOW TO PAY: Zelle to ${i.zelleEmail}${i.venmoHandle ? ` or Venmo @${i.venmoHandle} (https://venmo.com/u/${i.venmoHandle})` : ""} and put the ticket number in the memo or note.`,
     ...(i.payUrl ? [`Or pay by card, Apple Pay or Google Pay: ${i.payUrl}`] : []),
     "",
     "PAY FOR YOURS FIRST, THEN BRING YOUR CLOSE ONES",
@@ -59,10 +60,10 @@ export function pledgeConfirmation(i: PledgeMailInput) {
 <b>Just added:</b> ${esc(list(i.newTickets))} (${esc(money(i.newTickets.length * i.price))})</p>
 <div style="background:#f6f1e7;border-radius:10px;padding:14px 16px;margin:16px 0">
 <p style="margin:0 0 6px"><b>Every ticket has its own number</b></p>
-<p style="margin:0">Each ticket is ${esc(money(i.price))} and is tracked by its own ICCR number. When a ticket is paid, the person paying puts <b>that ticket's number</b> in the Zelle memo.</p>
-<p style="margin:8px 0 0">Example: if you give your uncle ticket <b>${esc(formatTicket(example))}</b>, he sends ${esc(money(i.price))} by Zelle with <b>${esc(formatTicket(example))}</b> in the memo, and that exact ticket is marked paid.</p>
+<p style="margin:0">Each ticket is ${esc(money(i.price))} and is tracked by its own ICCR number. When a ticket is paid, the person paying puts <b>that ticket's number</b> in the Zelle memo or Venmo note.</p>
+<p style="margin:8px 0 0">Example: if you give your uncle ticket <b>${esc(formatTicket(example))}</b>, he sends ${esc(money(i.price))} by Zelle or Venmo with <b>${esc(formatTicket(example))}</b> in the memo, and that exact ticket is marked paid.</p>
 </div>
-<p><b>How to pay:</b> Zelle to <b>${esc(i.zelleEmail)}</b> and put the ticket number in the memo.${i.payUrl ? `<br>Or <a href="${esc(i.payUrl)}">pay by card, Apple Pay or Google Pay</a>.` : ""}</p>
+<p><b>How to pay:</b> Zelle to <b>${esc(i.zelleEmail)}</b>${i.venmoHandle ? ` or Venmo <a href="https://venmo.com/u/${esc(i.venmoHandle)}">@${esc(i.venmoHandle)}</a>` : ""} and put the ticket number in the memo or note.${i.payUrl ? `<br>Or <a href="${esc(i.payUrl)}">pay by card, Apple Pay or Google Pay</a>.` : ""}</p>
 <div style="background:#0f4a3c;color:#f6f1e7;border-radius:10px;padding:14px 16px;margin:16px 0">
 <p style="margin:0 0 6px"><b>Pay for yours first, then bring your close ones</b></p>
 <p style="margin:0">Please cover your own ticket first. Then, <b>highly recommended</b>: pledge tickets for your family and friends and send each person their ICCR number so they can pay it.</p>

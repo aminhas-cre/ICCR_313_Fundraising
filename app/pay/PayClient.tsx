@@ -85,7 +85,7 @@ export default function PayClient({ initial }: { initial: string }) {
                   {busy ? "Opening secure checkout…" : "Pay by card, Apple Pay or Google Pay"}
                 </button>
               ) : (
-                <p className="mt-4 rounded-xl bg-sand-dark p-3 text-sm">Card payments aren&apos;t available yet. Please pay by Zelle and put the ticket number in the memo.</p>
+                <p className="mt-4 rounded-xl bg-sand-dark p-3 text-sm">Card payments aren&apos;t available yet. Please pay by Zelle or Venmo (@ICCR1) and put the ticket number in the memo.</p>
               )}
             </div>
           )}

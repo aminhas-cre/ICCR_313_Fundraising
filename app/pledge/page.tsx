@@ -31,7 +31,7 @@ export default async function PledgePage({ searchParams }: { searchParams: { pay
               <div className="mt-2 space-y-2 text-sm text-ink/80">
                 <p>
                   Step 2, highly recommended: reserve tickets for the people close to you. Each ticket gets its own ICCR number.
-                  Send each person their number and they pay that exact ticket (Zelle memo or card).
+                  Send each person their number and they pay that exact ticket (Zelle or Venmo memo, or card).
                 </p>
                 <p className="rounded-xl bg-sand-dark p-3">
                   Haven&apos;t covered your own ticket yet? <a className="font-semibold text-emerald underline" href="/pledge?pay=1">Pay for yours first</a>.
@@ -47,6 +47,7 @@ export default async function PledgePage({ searchParams }: { searchParams: { pay
             <PledgeForm
               price={cfg.ticket_price}
               zelle={cfg.zelle_email}
+              venmo={cfg.venmo_handle}
               left={left}
               mode={mode}
               initialCount={mode === "others" ? Math.min(4, left) : 1}
