@@ -120,6 +120,15 @@ export default function SettingsClient() {
           </p>
         </section>
 
+        <section className="space-y-2 rounded-2xl bg-white p-5 shadow-sm">
+          <h2 className="font-serif text-xl font-semibold text-emerald">Card payments (Stripe)</h2>
+          <p className="text-sm">
+            Status:{" "}
+            <b className={stripeOn ? "text-emerald" : "text-red-700"}>{stripeOn === null ? "checking…" : stripeOn ? "configured" : "not configured yet"}</b>
+            {stripeOn === false && <span className="text-ink/70"> (add STRIPE_SECRET_KEY and STRIPE_WEBHOOK_SECRET in Vercel; card buttons stay hidden until then)</span>}
+          </p>
+        </section>
+
         <section className="space-y-4 rounded-2xl bg-white p-5 shadow-sm">
           <h2 className="font-serif text-xl font-semibold text-emerald">Email</h2>
           <p className="text-sm">
