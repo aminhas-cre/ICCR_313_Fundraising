@@ -8,6 +8,7 @@ type Form = {
   zelle_email: string;
   zelle_note: string;
   venmo_handle: string;
+  launchgood_url: string;
   adjust_paid_amount: string;
   adjust_pledged_amount: string;
   adjust_note: string;
@@ -39,6 +40,7 @@ export default function SettingsClient() {
         zelle_email: s.zelle_email,
         zelle_note: s.zelle_note,
         venmo_handle: s.venmo_handle,
+        launchgood_url: s.launchgood_url,
         adjust_paid_amount: String(s.adjust_paid_amount),
         adjust_pledged_amount: String(s.adjust_pledged_amount),
         adjust_note: s.adjust_note ?? "",
@@ -104,10 +106,11 @@ export default function SettingsClient() {
         </section>
 
         <section className="space-y-4 rounded-2xl bg-white p-5 shadow-sm">
-          <h2 className="font-serif text-xl font-semibold text-emerald">Zelle and Venmo details</h2>
+          <h2 className="font-serif text-xl font-semibold text-emerald">Zelle, Venmo and LaunchGood details</h2>
           {field("zelle_email", "Zelle email", undefined, "email")}
           {field("zelle_note", "Memo note shown under it")}
           {field("venmo_handle", "Venmo handle (no @; leave empty to hide Venmo)", "ICCR1")}
+          {field("launchgood_url", "LaunchGood campaign link (leave empty to hide)", "https://www.launchgood.com/...")}
           <p className="text-xs text-ink/70">The Venmo QR picture on the site is for @ICCR1. If you change the handle, the QR is hidden and only the link shows.</p>
         </section>
 

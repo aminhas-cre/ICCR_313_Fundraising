@@ -72,6 +72,7 @@ export async function POST(req: Request) {
     price: cfg.ticket_price,
     zelleEmail: cfg.zelle_email,
     venmoHandle: cfg.venmo_handle,
+    launchgoodUrl: cfg.launchgood_url,
     statusUrl: `${base}/status`,
     shareUrl: base || "/",
     familyUrl: `${base}/pledge?for=others`,
@@ -99,6 +100,7 @@ export async function POST(req: Request) {
     price: cfg.ticket_price,
     zelle_email: cfg.zelle_email,
     venmo_handle: cfg.venmo_handle,
+    launchgood_url: cfg.launchgood_url,
     emailed: toDonor.ok,
     card_enabled: stripeConfigured(),
   });

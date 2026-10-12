@@ -1,5 +1,5 @@
 import { getSupabaseServerClient } from "./supabase";
-import { GOAL_DONORS, TICKET_PRICE, VENMO_HANDLE, ZELLE_EMAIL, ZELLE_NOTE } from "./constants";
+import { GOAL_DONORS, TICKET_PRICE, LAUNCHGOOD_URL, VENMO_HANDLE, ZELLE_EMAIL, ZELLE_NOTE } from "./constants";
 
 export interface Settings {
   goal_donors: number;
@@ -7,6 +7,7 @@ export interface Settings {
   zelle_email: string;
   zelle_note: string;
   venmo_handle: string; // without the @; empty hides Venmo
+  launchgood_url: string; // empty hides LaunchGood
   adjust_paid_amount: number;
   adjust_pledged_amount: number;
   adjust_note: string | null;
@@ -26,6 +27,7 @@ export const DEFAULT_SETTINGS: Settings = {
   zelle_email: ZELLE_EMAIL,
   zelle_note: ZELLE_NOTE,
   venmo_handle: VENMO_HANDLE,
+  launchgood_url: LAUNCHGOOD_URL,
   adjust_paid_amount: 0,
   adjust_pledged_amount: 0,
   adjust_note: null,
@@ -40,7 +42,7 @@ export async function getSettings(): Promise<Settings> {
   try {
     const { data } = await getSupabaseServerClient()
       .from("campaign_settings")
-      .select("goal_donors, ticket_price, zelle_email, zelle_note, venmo_handle, adjust_paid_amount, adjust_pledged_amount, adjust_note, legal_name, ein, receipt_statement, admin_notify_email")
+      .select("goal_donors, ticket_price, zelle_email, zelle_note, venmo_handle, launchgood_url, adjust_paid_amount, adjust_pledged_amount, adjust_note, legal_name, ein, receipt_statement, admin_notify_email")
       .eq("id", 1)
       .maybeSingle();
     return data ? { ...DEFAULT_SETTINGS, ...data } : DEFAULT_SETTINGS;
@@ -66,6 +68,12 @@ export function parseSettings(body: any): { data: Settings } | { error: string }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { error: "Enter a valid Zelle email" };
   const venmo = (typeof body.venmo_handle === "string" ? body.venmo_handle.trim() : "").replace(/^@/, "");
   if (venmo && !/^[A-Za-z0-9_-]{3,30}$/.test(venmo)) return { error: "Venmo handle should be letters, numbers, - or _ (like ICCR1)" };
+  const lg = typeof body.launchgood_url === "string" ? body.launchgood_url.trim() : "";
+  if (lg) {
+    let ok = false;
+    try { const u = new URL(lg); ok = u.protocol === "https:" && /(^|\.)launchgood\.com$/.test(u.hostname); } catch {}
+    if (!ok) return { error: "LaunchGood link must be an https://www.launchgood.com/... address (or empty to hide it)" };
+  }
   const legalName = typeof body.legal_name === "string" ? body.legal_name.trim() : "";
   if (!legalName || legalName.length > 120) return { error: "Enter the organization's legal name (up to 120 characters)" };
   const ein = typeof body.ein === "string" ? body.ein.trim() : "";
@@ -83,6 +91,7 @@ export function parseSettings(body: any): { data: Settings } | { error: string }
       zelle_email: email,
       zelle_note: clip(body.zelle_note, 200),
       venmo_handle: venmo,
+      launchgood_url: lg,
       adjust_paid_amount: paidAdj,
       adjust_pledged_amount: pledgedAdj,
       adjust_note: clip(body.adjust_note, 200) || null,

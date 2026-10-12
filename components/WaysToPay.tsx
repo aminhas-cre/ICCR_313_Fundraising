@@ -1,14 +1,17 @@
 import PayOptions from "./PayOptions";
+import LaunchGoodLink from "./LaunchGoodLink";
 
 // "Ways to pay" panel for Step 1: Zelle/Venmo suggested (free), card / Apple Pay / Google Pay as the alternative.
 export default function WaysToPay({
   zelle,
   venmo,
+  launchgood,
   cardEnabled,
   price,
 }: {
   zelle: string;
   venmo: string;
+  launchgood: string;
   cardEnabled: boolean;
   price: number;
 }) {
@@ -24,6 +27,14 @@ export default function WaysToPay({
           <PayOptions zelle={zelle} venmo={venmo} example="ICCR-2" />
         </div>
       </div>
+
+      {launchgood && (
+        <div className="rounded-2xl bg-white p-5 shadow-sm">
+          <h3 className="font-serif text-lg font-semibold text-emerald">Or give through LaunchGood</h3>
+          <p className="mt-1 text-sm text-ink/80">Pledge below first so you get your ticket number, then give on our LaunchGood page. It still counts as your ${price.toLocaleString("en-US")} ticket.</p>
+          <div className="mt-3"><LaunchGoodLink url={launchgood} price={price} /></div>
+        </div>
+      )}
 
       <div className="rounded-2xl bg-white p-5 shadow-sm">
         <h3 className="font-serif text-lg font-semibold text-emerald">Or pay by card</h3>
