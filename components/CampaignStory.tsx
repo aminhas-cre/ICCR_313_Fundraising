@@ -6,7 +6,9 @@ export default function CampaignStory({ goal, price, goalAmount }: { goal: numbe
       aria-label="Why we are fundraising"
       className="rounded-2xl border-l-4 border-gold bg-white p-6 shadow-sm sm:p-8"
     >
-      <p className="font-serif text-xl leading-snug text-emerald sm:text-2xl">
+      <h2 className="font-serif text-2xl font-semibold text-emerald">Introducing our ICCR {goal} fundraiser:</h2>
+
+      <p className="mt-3 font-serif text-xl leading-snug text-emerald sm:text-2xl">
         Alhamdulillah, ICCR has been a home for prayer, learning, and community here in Castle Rock.
       </p>
       <p className="mt-3 text-base text-ink/90">
@@ -14,13 +16,11 @@ export default function CampaignStory({ goal, price, goalAmount }: { goal: numbe
         our services running is at real risk.
       </p>
 
-      <h2 className="mt-6 font-serif text-2xl font-semibold text-emerald">Introducing our ICCR {goal} fundraiser</h2>
-
-      <h3 className="mt-4 text-sm font-bold uppercase tracking-wider text-gold-ink">Why {goal}?</h3>
-      <p className="mt-1 text-base text-ink/90">
-        At Badr, {goal} Companions stood up for the truth. They were few, outnumbered about three to one. Yet they
-        committed and risked everything, and Allah honored them. The Quran reminds us that He gave them victory at Badr
-        while they were few.
+      <h3 className="mt-6 font-serif text-xl font-semibold text-emerald">ICCR {goal} Campaign:</h3>
+      <p className="mt-2 text-base text-ink/90">
+        <b>Why {goal}?</b> At Badr, {goal} Companions stood up for the truth. They were few, outnumbered about three to
+        one. Yet they committed and risked everything, and Allah honored them. The Quran reminds us that He gave them
+        victory at Badr while they were few.
       </p>
       <p className="mt-3 rounded-xl bg-sand p-4 text-base font-semibold text-emerald">
         The lesson: a small group that steps up first lays the foundation for everyone who follows.

@@ -3,6 +3,7 @@ import PublicHeader from "@/components/PublicHeader";
 import ShareButtons from "@/components/ShareButtons";
 import Thermometer from "@/components/Thermometer";
 import CampaignStory from "@/components/CampaignStory";
+import CtaButtons from "@/components/CtaButtons";
 import PayOptions from "@/components/PayOptions";
 import { getStats } from "@/lib/stats";
 import { getSettings } from "@/lib/settings";
@@ -12,9 +13,7 @@ export const dynamic = "force-dynamic";
 const fmt = (n: number) => `$${n.toLocaleString("en-US")}`;
 const SHOW = 100; // supporters shown before "and N more"
 
-export default async function Home({ searchParams }: { searchParams: { story?: string } }) {
-  // Preview toggle: /?story=side puts the message in a sticky side column on desktop.
-  const side = searchParams.story === "side";
+export default async function Home() {
   const cfg = await getSettings();
   const s = await getStats(cfg);
   const full = s.numbersLeft === 0;
@@ -42,24 +41,7 @@ export default async function Home({ searchParams }: { searchParams: { story?: s
         </p>
       ) : (
         <div className="mx-auto mt-6 max-w-xl text-left">
-          <div className="grid gap-3 sm:grid-cols-2">
-            <Link
-              href="/pledge?pay=1"
-              className="block rounded-2xl bg-emerald px-5 py-4 text-sand shadow-sm transition hover:bg-emerald-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald focus-visible:ring-offset-2"
-            >
-              <span className="text-xs font-bold uppercase tracking-wider text-gold-light">Step 1</span>
-              <span className="block font-serif text-xl font-semibold">Pay for my ticket</span>
-              <span className="mt-0.5 block text-sm text-sand/85">Cover your own {fmt(cfg.ticket_price)} first</span>
-            </Link>
-            <Link
-              href="/pledge?for=others"
-              className="block rounded-2xl border-2 border-emerald bg-white px-5 py-4 text-emerald shadow-sm transition hover:bg-sand-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald focus-visible:ring-offset-2"
-            >
-              <span className="text-xs font-bold uppercase tracking-wider text-gold-ink">Step 2 · highly recommended</span>
-              <span className="block font-serif text-xl font-semibold">Pledge for family &amp; friends</span>
-              <span className="mt-0.5 block text-sm text-ink/80">Bring your close ones in with you</span>
-            </Link>
-          </div>
+          <CtaButtons price={cfg.ticket_price} />
           <p className="mt-4 rounded-2xl bg-sand-dark p-4 text-sm text-ink/90">
             <b className="text-emerald">Start with yourself, then bring your people.</b> Pay for your own ticket first. Then
             pledge tickets for your family and friends and send each person their ICCR number so they can pay it. Every one
@@ -72,12 +54,6 @@ export default async function Home({ searchParams }: { searchParams: { story?: s
 
   const rest = (
     <>
-      <section className="space-y-6 rounded-2xl bg-white p-6 shadow-sm sm:p-8" aria-label="Progress">
-        <Thermometer label="Pledged" tickets={s.pledgedTickets} goalTickets={s.goalTickets} amount={s.pledgedAmount} goalAmount={s.goalAmount} tone="gold" />
-        <Thermometer label="Paid" tickets={s.paidTickets} goalTickets={s.goalTickets} amount={s.paidAmount} goalAmount={s.goalAmount} tone="emerald" />
-        {!full && <p className="text-sm font-semibold text-emerald">{s.numbersLeft} ticket{s.numbersLeft === 1 ? "" : "s"} left. Be one of the first.</p>}
-      </section>
-
       <section className="mt-8 rounded-2xl bg-emerald p-6 text-sand sm:p-8">
         <h2 className="font-serif text-2xl font-semibold">How it works</h2>
         <ol className="mt-4 space-y-4">
@@ -149,29 +125,26 @@ export default async function Home({ searchParams }: { searchParams: { story?: s
     </>
   );
 
-  const story = <CampaignStory goal={cfg.goal_donors} price={cfg.ticket_price} goalAmount={s.goalAmount} />;
-
   return (
     <>
-      <PublicHeader wide={side} />
-      <main className={`mx-auto px-4 pb-16 ${side ? "max-w-6xl" : "max-w-3xl"}`}>
-        {side ? (
-          // Preview B: story in a sticky right-hand column on desktop; on phones it simply follows the hero.
-          <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_25rem] lg:gap-x-10">
-            <div className="lg:col-start-1 lg:row-start-1">{hero}</div>
-            <aside className="mt-2 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mt-14">
-              <div className="lg:sticky lg:top-6">{story}</div>
-            </aside>
-            <div className="mt-8 lg:col-start-1 lg:row-start-2">{rest}</div>
+      <PublicHeader />
+      <main className="mx-auto max-w-3xl px-4 pb-16">
+        {hero}
+        {/* Order: ask -> proof of progress -> why -> ask again -> how -> who else gave -> share -> FAQ */}
+        <section className="space-y-6 rounded-2xl bg-white p-6 shadow-sm sm:p-8" aria-label="Progress">
+          <Thermometer label="Pledged" tickets={s.pledgedTickets} goalTickets={s.goalTickets} amount={s.pledgedAmount} goalAmount={s.goalAmount} tone="gold" />
+          <Thermometer label="Paid" tickets={s.paidTickets} goalTickets={s.goalTickets} amount={s.paidAmount} goalAmount={s.goalAmount} tone="emerald" />
+          {!full && <p className="text-sm font-semibold text-emerald">{s.numbersLeft} ticket{s.numbersLeft === 1 ? "" : "s"} left. Be one of the first.</p>}
+        </section>
+        <div className="mt-8">
+          <CampaignStory goal={cfg.goal_donors} price={cfg.ticket_price} goalAmount={s.goalAmount} />
+        </div>
+        {!full && (
+          <div className="mx-auto mt-6 max-w-xl">
+            <CtaButtons price={cfg.ticket_price} />
           </div>
-        ) : (
-          // Layout A (default): story as a full-width card right under the hero buttons.
-          <>
-            {hero}
-            <div className="mb-8">{story}</div>
-            {rest}
-          </>
         )}
+        {rest}
       </main>
     </>
   );
