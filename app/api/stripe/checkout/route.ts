@@ -10,7 +10,7 @@ import { createCheckoutSession, stripeConfigured } from "@/lib/stripe";
 export const dynamic = "force-dynamic";
 const MAX_TICKETS = 50;
 
-// Public: start a card / Apple Pay / Google Pay checkout for specific unpaid tickets.
+// Public: start a card / Apple Pay / debit checkout for specific unpaid tickets.
 // The amount is always recomputed here; the browser never sets the price.
 export async function POST(req: Request) {
   if (!stripeConfigured()) return NextResponse.json({ error: "Card payments aren't available yet." }, { status: 503 });

@@ -48,3 +48,17 @@ export interface PledgeView {
   tickets: PledgeTicket[];
   card_enabled: boolean;
 }
+
+// What a donor says they plan to use on the pledge form (intent, not proof of payment: see pay_method).
+export const CHOICE_METHODS = ["zelle", "venmo", "launchgood", "card"] as const;
+export type ChoiceMethod = (typeof CHOICE_METHODS)[number];
+export const CHOICE_LABELS: Record<ChoiceMethod, string> = {
+  zelle: "Zelle",
+  venmo: "Venmo",
+  launchgood: "LaunchGood",
+  card: "Card / Apple Pay",
+};
+export function cleanChoices(v: unknown): ChoiceMethod[] {
+  if (!Array.isArray(v)) return [];
+  return CHOICE_METHODS.filter((m) => v.includes(m));
+}

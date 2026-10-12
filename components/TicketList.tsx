@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import type { PledgeView } from "@/lib/types";
 import PayOptions from "@/components/PayOptions";
 import LaunchGoodLink from "@/components/LaunchGoodLink";
+import CardButton from "@/components/CardButton";
 import { formatTicket } from "@/lib/tickets";
 
 const money = (n: number) => `$${n.toLocaleString("en-US")}`;
@@ -50,12 +51,12 @@ export default function TicketList({ initial }: { initial: PledgeView }) {
           <div><dt className="text-xs text-ink/70">Awaiting payment</dt><dd className="font-serif text-2xl font-bold">{unpaid}</dd></div>
         </dl>
         {unpaid > 0 && initial.card_enabled && (
-          <a
-            className="btn-primary mt-5 w-full"
-            href={`/pay?t=${tickets.filter((t) => !t.paid).map((t) => t.no).join(",")}`}
-          >
-            Pay {unpaid} unpaid ticket{unpaid > 1 ? "s" : ""} by card, Apple Pay or Google Pay
-          </a>
+          <div className="mt-5">
+            <CardButton
+              href={`/pay?t=${tickets.filter((t) => !t.paid).map((t) => t.no).join(",")}`}
+              label={`Pay ${unpaid} unpaid ticket${unpaid > 1 ? "s" : ""} with Apple Pay, debit or credit card`}
+            />
+          </div>
         )}
         {unpaid > 0 && (
           <div className="mt-5 rounded-xl bg-sand p-4 text-sm">
