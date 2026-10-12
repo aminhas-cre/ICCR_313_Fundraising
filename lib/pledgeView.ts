@@ -17,6 +17,7 @@ async function build(donor: { id: string; full_name: string; access_token: strin
     name: donor.full_name,
     token: donor.access_token,
     zelle_email: cfg.zelle_email,
+    venmo_handle: cfg.venmo_handle,
     ticket_price: cfg.ticket_price,
     card_enabled: stripeConfigured(),
     tickets: (rows ?? []).map((t) => ({

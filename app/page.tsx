@@ -3,6 +3,7 @@ import PublicHeader from "@/components/PublicHeader";
 import ShareButtons from "@/components/ShareButtons";
 import Thermometer from "@/components/Thermometer";
 import CampaignStory from "@/components/CampaignStory";
+import PayOptions from "@/components/PayOptions";
 import { getStats } from "@/lib/stats";
 import { getSettings } from "@/lib/settings";
 
@@ -22,8 +23,8 @@ export default async function Home({ searchParams }: { searchParams: { story?: s
 
   const FAQ: [string, string][] = [
     ["Who should I pledge for?", `Start with yourself: pay for your own ticket. Then pledge tickets for your family and friends. Each ticket has its own ICCR number, so you can send a person their number and they pay that exact ticket. Bringing your close ones in is what makes this work.`],
-    ["How do I pay?", `Pledge online and you'll get your ICCR ticket numbers. Then send ${fmt(cfg.ticket_price)} per ticket by Zelle to ${cfg.zelle_email} and put the ticket number in the memo. We match payments by hand, so it can take a day or two to show.`],
-    ["Does every ticket have its own number?", "Yes. If you pledge 5 tickets you get 5 numbers. You can pay for them yourself or give a ticket to someone else, like an uncle, who sends the Zelle with that ticket's number in the memo."],
+    ["How do I pay?", `Pledge online and you'll get your ICCR ticket numbers. Then send ${fmt(cfg.ticket_price)} per ticket by Zelle to ${cfg.zelle_email}${cfg.venmo_handle ? ` or Venmo @${cfg.venmo_handle}` : ""} and put the ticket number in the memo (or Venmo note). Both are free for ICCR. We match payments by hand, so it can take a day or two to show.`],
+    ["Does every ticket have its own number?", "Yes. If you pledge 5 tickets you get 5 numbers. You can pay for them yourself or give a ticket to someone else, like an uncle, who sends the Zelle or Venmo with that ticket's number in the memo."],
     ["How do I know my pledge was paid?", "Use Check my pledge with your email. It lists each of your tickets and whether it's been paid."],
     ["Where does the money go?", "A permanent prayer space, youth and community programs, Islamic education, and sadaqah jariyah that keeps giving long after us."],
   ];
@@ -88,8 +89,8 @@ export default async function Home({ searchParams }: { searchParams: { story?: s
             <span className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-sand font-bold text-emerald" aria-hidden="true">2</span>
             <span>
               <b>Put the ticket number in the memo.</b> That&apos;s how we match your payment.
-              <span className="mt-2 block rounded-xl bg-sand p-3 text-sm font-semibold text-emerald">
-                Zelle to <span className="break-all">{cfg.zelle_email}</span> with the ticket number in the memo, like ICCR-2.
+              <span className="mt-2 block rounded-xl bg-sand p-3 text-emerald">
+                <PayOptions zelle={cfg.zelle_email} venmo={cfg.venmo_handle} example="ICCR-2" />
               </span>
             </span>
           </li>

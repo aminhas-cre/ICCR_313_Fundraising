@@ -7,6 +7,7 @@ type Form = {
   ticket_price: string;
   zelle_email: string;
   zelle_note: string;
+  venmo_handle: string;
   adjust_paid_amount: string;
   adjust_pledged_amount: string;
   adjust_note: string;
@@ -37,6 +38,7 @@ export default function SettingsClient() {
         ticket_price: String(s.ticket_price),
         zelle_email: s.zelle_email,
         zelle_note: s.zelle_note,
+        venmo_handle: s.venmo_handle,
         adjust_paid_amount: String(s.adjust_paid_amount),
         adjust_pledged_amount: String(s.adjust_pledged_amount),
         adjust_note: s.adjust_note ?? "",
@@ -102,9 +104,20 @@ export default function SettingsClient() {
         </section>
 
         <section className="space-y-4 rounded-2xl bg-white p-5 shadow-sm">
-          <h2 className="font-serif text-xl font-semibold text-emerald">Zelle details</h2>
+          <h2 className="font-serif text-xl font-semibold text-emerald">Zelle and Venmo details</h2>
           {field("zelle_email", "Zelle email", undefined, "email")}
           {field("zelle_note", "Memo note shown under it")}
+          {field("venmo_handle", "Venmo handle (no @; leave empty to hide Venmo)", "ICCR1")}
+          <p className="text-xs text-ink/70">The Venmo QR picture on the site is for @ICCR1. If you change the handle, the QR is hidden and only the link shows.</p>
+        </section>
+
+        <section className="space-y-2 rounded-2xl bg-white p-5 shadow-sm">
+          <h2 className="font-serif text-xl font-semibold text-emerald">Card payments (Stripe)</h2>
+          <p className="text-sm">
+            Status:{" "}
+            <b className={stripeOn ? "text-emerald" : "text-red-700"}>{stripeOn === null ? "checking…" : stripeOn ? "configured" : "not configured yet"}</b>
+            {stripeOn === false && <span className="text-ink/70"> (add STRIPE_SECRET_KEY and STRIPE_WEBHOOK_SECRET in Vercel; card buttons stay hidden until then)</span>}
+          </p>
         </section>
 
         <section className="space-y-2 rounded-2xl bg-white p-5 shadow-sm">

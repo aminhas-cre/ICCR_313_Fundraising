@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import ShareButtons from "@/components/ShareButtons";
+import PayOptions from "@/components/PayOptions";
 import { formatTicket } from "@/lib/tickets";
 
 interface Done {
@@ -11,12 +12,13 @@ interface Done {
   due: number;
   price: number;
   zelle_email: string;
+  venmo_handle: string;
   emailed: boolean;
 }
 
 const money = (n: number) => `$${n.toLocaleString("en-US")}`;
 
-export default function PledgeForm({ price, zelle, left, mode, initialCount }: { price: number; zelle: string; left: number; mode: "self" | "others" | "default"; initialCount: number }) {
+export default function PledgeForm({ price, zelle, venmo, left, mode, initialCount }: { price: number; zelle: string; venmo: string; left: number; mode: "self" | "others" | "default"; initialCount: number }) {
   const payNow = mode === "self";
   const max = Math.min(left, 50);
   const [f, setF] = useState({ full_name: "", email: "", phone: "", ticket_count: initialCount, show_public: true, website: "" });
@@ -43,23 +45,23 @@ export default function PledgeForm({ price, zelle, left, mode, initialCount }: {
     const payBlock = (
       <section className={`rounded-2xl p-6 ${payNow ? "bg-emerald text-sand" : "bg-white shadow-sm"}`} aria-label="How to pay">
         <h2 className="font-serif text-xl font-semibold">{payNow ? `Pay now: ${money(done.due)}` : "When you're ready to pay"}</h2>
+        <p className={`mt-3 text-sm font-semibold ${payNow ? "" : "text-ink/90"}`}>Pay by Zelle or Venmo (free for ICCR):</p>
+        <div className="mt-1">
+          <PayOptions zelle={done.zelle_email} venmo={done.venmo_handle} tone={payNow ? "dark" : "light"} example={formatTicket(done.tickets[0])} />
+        </div>
         {done.card_enabled && (
-          <a
-            href={`/pay?t=${nums}`}
-            className={`mt-3 inline-flex min-h-[44px] w-full items-center justify-center rounded-full px-5 py-3 text-sm font-semibold ${
-              payNow ? "bg-sand text-emerald hover:bg-white" : "bg-emerald text-sand hover:bg-emerald-dark"
-            }`}
-          >
-            Pay by card, Apple Pay or Google Pay
-          </a>
+          <>
+            <p className={`mt-4 text-sm font-semibold ${payNow ? "" : "text-ink/90"}`}>Prefer a card?</p>
+            <a
+              href={`/pay?t=${nums}`}
+              className={`mt-1 inline-flex min-h-[44px] w-full items-center justify-center rounded-full px-5 py-3 text-sm font-semibold ${
+                payNow ? "bg-sand text-emerald hover:bg-white" : "bg-emerald text-sand hover:bg-emerald-dark"
+              }`}
+            >
+              Pay by card, Apple Pay or Google Pay
+            </a>
+          </>
         )}
-        <p className={`mt-3 text-sm font-semibold ${payNow ? "" : "text-ink/90"}`}>{done.card_enabled ? "Or pay by Zelle:" : "Pay by Zelle:"}</p>
-        <ol className={`mt-1 list-decimal space-y-1 pl-5 text-sm ${payNow ? "" : "text-ink/90"}`}>
-          <li>Send to <b className="break-all">{done.zelle_email}</b></li>
-          <li>
-            Put the <b>ticket number</b> in the memo, for example <b>{formatTicket(done.tickets[0])}</b>. Several tickets in one payment? List them all.
-          </li>
-        </ol>
       </section>
     );
     const nudge =
@@ -68,7 +70,7 @@ export default function PledgeForm({ price, zelle, left, mode, initialCount }: {
           <h2 className="font-serif text-xl font-semibold text-emerald">Send each person their number</h2>
           <p className="mt-1 text-sm text-ink/80">
             Give each of your family and friends one ticket number from above. They pay that exact ticket, so tell them to
-            put the number in the Zelle memo{done.card_enabled ? " or use the pay link" : ""}.
+            put the number in the Zelle memo or Venmo note{done.card_enabled ? " or use the pay link" : ""}.
           </p>
           <a className="btn-secondary mt-3 w-full" href="/pledge?pay=1">Pay for my own ticket too</a>
         </section>
@@ -96,7 +98,7 @@ export default function PledgeForm({ price, zelle, left, mode, initialCount }: {
           )}
           <p className="mt-4 text-sm text-ink/80">
             <b>Every ticket has its own number.</b> Whoever pays a ticket puts that ticket&apos;s number in the memo. For
-            example, if you give your uncle <b>{formatTicket(example)}</b>, he sends {money(done.price)} by Zelle with{" "}
+            example, if you give your uncle <b>{formatTicket(example)}</b>, he sends {money(done.price)} by Zelle or Venmo with{" "}
             <b>{formatTicket(example)}</b> in the memo.
           </p>
           {done.emailed && <p className="mt-3 text-xs text-ink/70">We&apos;ve emailed you a confirmation with these numbers.</p>}
@@ -158,7 +160,7 @@ export default function PledgeForm({ price, zelle, left, mode, initialCount }: {
       <button className="btn-primary w-full !py-3 text-base" type="submit" disabled={busy}>
         {busy ? "Saving…" : `Pledge ${money(f.ticket_count * price)}`}
       </button>
-      <p className="text-center text-xs text-ink/70">You pay by Zelle to {zelle} after you pledge.</p>
+      <p className="text-center text-xs text-ink/70">You pay by Zelle ({zelle}){venmo ? ` or Venmo (@${venmo})` : ""} after you pledge.</p>
     </form>
   );
 }

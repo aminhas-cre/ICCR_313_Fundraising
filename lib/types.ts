@@ -1,4 +1,4 @@
-export const PAYMENT_METHODS = ["zelle", "cash", "check", "card", "other"] as const;
+export const PAYMENT_METHODS = ["zelle", "venmo", "cash", "check", "card", "other"] as const;
 export type PaymentMethod = (typeof PAYMENT_METHODS)[number];
 
 // A pledger (one record per email).
@@ -42,6 +42,7 @@ export interface PledgeView {
   name: string;
   token: string;
   zelle_email: string;
+  venmo_handle: string;
   ticket_price: number;
   tickets: PledgeTicket[];
   card_enabled: boolean;
