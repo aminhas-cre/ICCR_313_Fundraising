@@ -47,6 +47,14 @@ export default function TicketList({ initial }: { initial: PledgeView }) {
           <div><dt className="text-xs text-ink/70">Paid</dt><dd className="font-serif text-2xl font-bold text-emerald">{paid}</dd></div>
           <div><dt className="text-xs text-ink/70">Awaiting payment</dt><dd className="font-serif text-2xl font-bold">{unpaid}</dd></div>
         </dl>
+        {unpaid > 0 && initial.card_enabled && (
+          <a
+            className="btn-primary mt-5 w-full"
+            href={`/pay?t=${tickets.filter((t) => !t.paid).map((t) => t.no).join(",")}`}
+          >
+            Pay {unpaid} unpaid ticket{unpaid > 1 ? "s" : ""} by card, Apple Pay or Google Pay
+          </a>
+        )}
         {unpaid > 0 && (
           <div className="mt-5 rounded-xl bg-sand p-4 text-sm">
             <p className="font-semibold text-emerald">To pay a ticket</p>
@@ -82,6 +90,9 @@ export default function TicketList({ initial }: { initial: PledgeView }) {
                 {t.paid ? `Paid${t.received_on ? ` · ${t.received_on}` : ""}` : "Awaiting payment"}
               </span>
             </div>
+            {!t.paid && initial.card_enabled && (
+              <a className="mt-2 inline-block text-sm font-semibold text-emerald underline" href={`/pay?t=${t.no}`}>Pay this ticket by card</a>
+            )}
             <label className="mt-3 flex min-h-[44px] cursor-pointer items-center gap-3 text-sm">
               <input
                 type="checkbox"
@@ -104,7 +115,9 @@ export default function TicketList({ initial }: { initial: PledgeView }) {
                   onBlur={(e) => update(t.no, { passed_to: e.target.value.trim() || null }, true)}
                 />
                 {!t.paid && (
-                  <p className="mt-1 text-xs text-ink/70">Tell them to put <b>{formatTicket(t.no)}</b> in the Zelle memo.</p>
+                  <p className="mt-1 text-xs text-ink/70">
+                    Tell them to put <b>{formatTicket(t.no)}</b> in the Zelle memo{initial.card_enabled ? <>, or send them <a className="underline" href={`/pay?t=${t.no}`}>this pay link</a></> : ""}.
+                  </p>
                 )}
               </div>
             )}

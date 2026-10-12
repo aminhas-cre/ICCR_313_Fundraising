@@ -6,9 +6,9 @@ const heading = EB_Garamond({ subsets: ["latin"], weight: ["500", "600", "700"],
 const body = Lato({ subsets: ["latin"], weight: ["400", "700"], variable: "--font-body", display: "swap" });
 
 export const metadata: Metadata = {
-  title: "313: Building Our Masjid, Building Our Future",
+  title: "313: Support Your Castle Rock Muslim Community Center",
   description:
-    "313 founders giving $250 each to build a permanent masjid for Islamic Center of Castle Rock. Track our progress.",
+    "Support your Castle Rock Muslim Community Center. 313 people giving $250 each to keep the Islamic Center of Castle Rock strong. Pay for your ticket, then bring your family and friends.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

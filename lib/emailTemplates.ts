@@ -17,6 +17,8 @@ export interface PledgeMailInput {
   zelleEmail: string;
   statusUrl: string;
   shareUrl: string;
+  familyUrl: string;
+  payUrl: string | null; // card checkout link, only when Stripe is configured
 }
 
 // Confirmation to the donor: how many tickets they hold now, each with its own number.
@@ -38,6 +40,11 @@ export function pledgeConfirmation(i: PledgeMailInput) {
     `Example: if you give your uncle ticket ${formatTicket(example)}, he sends ${money(i.price)} by Zelle with "${formatTicket(example)}" in the memo, and that exact ticket is marked paid.`,
     "",
     `HOW TO PAY: Zelle to ${i.zelleEmail} and put the ticket number in the memo.`,
+    ...(i.payUrl ? [`Or pay by card, Apple Pay or Google Pay: ${i.payUrl}`] : []),
+    "",
+    "PAY FOR YOURS FIRST, THEN BRING YOUR CLOSE ONES",
+    "Please cover your own ticket first. Then, highly recommended: pledge tickets for your family and friends and send each person their ICCR number so they can pay it.",
+    `Pledge for family & friends: ${i.familyUrl}`,
     "",
     `Check which of your tickets are paid any time with your email: ${i.statusUrl}`,
     "",
@@ -55,7 +62,12 @@ export function pledgeConfirmation(i: PledgeMailInput) {
 <p style="margin:0">Each ticket is ${esc(money(i.price))} and is tracked by its own ICCR number. When a ticket is paid, the person paying puts <b>that ticket's number</b> in the Zelle memo.</p>
 <p style="margin:8px 0 0">Example: if you give your uncle ticket <b>${esc(formatTicket(example))}</b>, he sends ${esc(money(i.price))} by Zelle with <b>${esc(formatTicket(example))}</b> in the memo, and that exact ticket is marked paid.</p>
 </div>
-<p><b>How to pay:</b> Zelle to <b>${esc(i.zelleEmail)}</b> and put the ticket number in the memo.</p>
+<p><b>How to pay:</b> Zelle to <b>${esc(i.zelleEmail)}</b> and put the ticket number in the memo.${i.payUrl ? `<br>Or <a href="${esc(i.payUrl)}">pay by card, Apple Pay or Google Pay</a>.` : ""}</p>
+<div style="background:#0f4a3c;color:#f6f1e7;border-radius:10px;padding:14px 16px;margin:16px 0">
+<p style="margin:0 0 6px"><b>Pay for yours first, then bring your close ones</b></p>
+<p style="margin:0">Please cover your own ticket first. Then, <b>highly recommended</b>: pledge tickets for your family and friends and send each person their ICCR number so they can pay it.</p>
+<p style="margin:10px 0 0"><a style="color:#f6f1e7;font-weight:bold" href="${esc(i.familyUrl)}">Pledge for family &amp; friends</a></p>
+</div>
 <p>Check which of your tickets are paid any time with your email:<br><a href="${esc(i.statusUrl)}">${esc(i.statusUrl)}</a></p>
 <p>Share this page with family and friends:<br><a href="${esc(i.shareUrl)}">${esc(i.shareUrl)}</a><br>
 <span style="color:#555">Every person you bring in multiplies your reward, in sha Allah.</span></p>`);

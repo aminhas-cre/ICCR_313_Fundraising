@@ -23,13 +23,15 @@ export default function SettingsClient() {
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [saving, setSaving] = useState(false);
   const [emailOn, setEmailOn] = useState<boolean | null>(null);
+  const [stripeOn, setStripeOn] = useState<boolean | null>(null);
 
   useEffect(() => {
     (async () => {
       const r = await fetch("/api/settings");
       if (r.status === 401) return (window.location.href = "/admin/login");
-      const { settings: s, email_configured } = await r.json();
+      const { settings: s, email_configured, stripe_configured } = await r.json();
       setEmailOn(email_configured);
+      setStripeOn(stripe_configured);
       setF({
         goal_donors: String(s.goal_donors),
         ticket_price: String(s.ticket_price),
@@ -103,6 +105,15 @@ export default function SettingsClient() {
           <h2 className="font-serif text-xl font-semibold text-emerald">Zelle details</h2>
           {field("zelle_email", "Zelle email", undefined, "email")}
           {field("zelle_note", "Memo note shown under it")}
+        </section>
+
+        <section className="space-y-2 rounded-2xl bg-white p-5 shadow-sm">
+          <h2 className="font-serif text-xl font-semibold text-emerald">Card payments (Stripe)</h2>
+          <p className="text-sm">
+            Status:{" "}
+            <b className={stripeOn ? "text-emerald" : "text-red-700"}>{stripeOn === null ? "checking…" : stripeOn ? "configured" : "not configured yet"}</b>
+            {stripeOn === false && <span className="text-ink/70"> (add STRIPE_SECRET_KEY and STRIPE_WEBHOOK_SECRET in Vercel; card buttons stay hidden until then)</span>}
+          </p>
         </section>
 
         <section className="space-y-4 rounded-2xl bg-white p-5 shadow-sm">

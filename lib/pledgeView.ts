@@ -1,5 +1,6 @@
 import { getSupabaseServerClient } from "./supabase";
 import { getSettings } from "./settings";
+import { stripeConfigured } from "./stripe";
 import type { PledgeView } from "./types";
 
 async function build(donor: { id: string; full_name: string; access_token: string }): Promise<PledgeView> {
@@ -17,6 +18,7 @@ async function build(donor: { id: string; full_name: string; access_token: strin
     token: donor.access_token,
     zelle_email: cfg.zelle_email,
     ticket_price: cfg.ticket_price,
+    card_enabled: stripeConfigured(),
     tickets: (rows ?? []).map((t) => ({
       no: t.ticket_no,
       paid: t.paid,
