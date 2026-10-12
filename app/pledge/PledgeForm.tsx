@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useState } from "react";
 import ShareButtons from "@/components/ShareButtons";
 import PayOptions from "@/components/PayOptions";
+import LaunchGoodLink from "@/components/LaunchGoodLink";
 import { formatTicket } from "@/lib/tickets";
 
 interface Done {
@@ -13,6 +14,7 @@ interface Done {
   price: number;
   zelle_email: string;
   venmo_handle: string;
+  launchgood_url: string;
   emailed: boolean;
 }
 
@@ -49,6 +51,12 @@ export default function PledgeForm({ price, zelle, venmo, left, mode, initialCou
         <div className="mt-1">
           <PayOptions zelle={done.zelle_email} venmo={done.venmo_handle} tone={payNow ? "dark" : "light"} example={formatTicket(done.tickets[0])} />
         </div>
+        {done.launchgood_url && (
+          <>
+            <p className={`mt-4 text-sm font-semibold ${payNow ? "" : "text-ink/90"}`}>Or give through LaunchGood:</p>
+            <div className="mt-1"><LaunchGoodLink url={done.launchgood_url} price={done.price} tone={payNow ? "dark" : "light"} /></div>
+          </>
+        )}
         {done.card_enabled && (
           <>
             <p className={`mt-4 text-sm font-semibold ${payNow ? "" : "text-ink/90"}`}>Or pay by card, Apple Pay or Google Pay (small processing fee):</p>

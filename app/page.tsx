@@ -22,7 +22,7 @@ export default async function Home() {
 
   const FAQ: [string, string][] = [
     ["Who should I pledge for?", `Start with yourself: pay for your own ticket. Then pledge tickets for your family and friends. Each ticket has its own ICCR number, so you can send a person their number and they pay that exact ticket. Bringing your close ones in is what makes this work.`],
-    ["How do I pay?", `Pledge online and you'll get your ICCR ticket numbers. Then send ${fmt(cfg.ticket_price)} per ticket by Zelle to ${cfg.zelle_email}${cfg.venmo_handle ? ` or Venmo @${cfg.venmo_handle}` : ""} and put the ticket number in the memo (or Venmo note). Both are free for ICCR. We match payments by hand, so it can take a day or two to show.`],
+    ["How do I pay?", `Pledge online and you'll get your ICCR ticket numbers. Then send ${fmt(cfg.ticket_price)} per ticket by Zelle to ${cfg.zelle_email}${cfg.venmo_handle ? ` or Venmo @${cfg.venmo_handle}` : ""} and put the ticket number in the memo (or Venmo note). Both are free for ICCR.${cfg.launchgood_url ? ` You can also give ${fmt(cfg.ticket_price)} per ticket on our LaunchGood page (use the same email you pledged with).` : ""} We match payments by hand, so it can take a day or two to show.`],
     ["Does every ticket have its own number?", "Yes. If you pledge 5 tickets you get 5 numbers. You can pay for them yourself or give a ticket to someone else, like an uncle, who sends the Zelle or Venmo with that ticket's number in the memo."],
     ["How do I know my pledge was paid?", "Use Check my pledge with your email. It lists each of your tickets and whether it's been paid."],
     ["Where does the money go?", "A permanent prayer space, youth and community programs, Islamic education, and sadaqah jariyah that keeps giving long after us."],
@@ -67,6 +67,11 @@ export default async function Home() {
               <b>Put the ticket number in the memo.</b> That&apos;s how we match your payment.
               <span className="mt-2 block rounded-xl bg-sand p-3 text-emerald">
                 <PayOptions zelle={cfg.zelle_email} venmo={cfg.venmo_handle} example="ICCR-2" />
+                {cfg.launchgood_url && (
+                  <span className="mt-2 block text-sm">
+                    Or <a href={cfg.launchgood_url} target="_blank" rel="noopener noreferrer" className="font-semibold underline">give through LaunchGood</a>. Use the same email you pledged with.
+                  </span>
+                )}
               </span>
             </span>
           </li>

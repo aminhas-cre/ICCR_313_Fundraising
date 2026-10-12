@@ -2,6 +2,7 @@
 import { useRef, useState } from "react";
 import type { PledgeView } from "@/lib/types";
 import PayOptions from "@/components/PayOptions";
+import LaunchGoodLink from "@/components/LaunchGoodLink";
 import { formatTicket } from "@/lib/tickets";
 
 const money = (n: number) => `$${n.toLocaleString("en-US")}`;
@@ -63,6 +64,12 @@ export default function TicketList({ initial }: { initial: PledgeView }) {
             <div className="mt-1">
               <PayOptions zelle={initial.zelle_email} venmo={initial.venmo_handle} example={formatTicket(tickets.find((t) => !t.paid)!.no)} />
             </div>
+            {initial.launchgood_url && (
+              <div className="mt-3 border-t border-sand-dark pt-3">
+                <p className="mb-2 font-semibold text-emerald">Or give through LaunchGood</p>
+                <LaunchGoodLink url={initial.launchgood_url} price={initial.ticket_price} />
+              </div>
+            )}
             <p className="mt-2 text-xs text-ink/70">Payments are matched by hand, so it can take a day or two to show here.</p>
           </div>
         )}

@@ -2,6 +2,7 @@
 // (see lib/settings.ts); these are the fallback if that row is unavailable.
 export const TICKET_PRICE = 250;
 export const GOAL_DONORS = 313;
+export const LAUNCHGOOD_URL = "https://www.launchgood.com/v4/campaign/iccr__keep_the_lights_on";
 export const VENMO_HANDLE = "ICCR1";
 export const ZELLE_EMAIL = "islamiccentercastlerock@gmail.com";
 export const ZELLE_NOTE = "Put the ticket number (like ICCR-2) in the memo so we can match your payment.";

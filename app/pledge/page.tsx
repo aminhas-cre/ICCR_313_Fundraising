@@ -47,7 +47,7 @@ export default async function PledgePage({ searchParams }: { searchParams: { pay
               </p>
             )}
             {mode !== "others" && (
-              <WaysToPay zelle={cfg.zelle_email} venmo={cfg.venmo_handle} cardEnabled={stripeConfigured()} price={cfg.ticket_price} />
+              <WaysToPay zelle={cfg.zelle_email} venmo={cfg.venmo_handle} launchgood={cfg.launchgood_url} cardEnabled={stripeConfigured()} price={cfg.ticket_price} />
             )}
             <PledgeForm
               price={cfg.ticket_price}
