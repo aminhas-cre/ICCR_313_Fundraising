@@ -59,7 +59,7 @@ export default function TicketList({ initial }: { initial: PledgeView }) {
         {unpaid > 0 && (
           <div className="mt-5 rounded-xl bg-sand p-4 text-sm">
             <p className="font-semibold text-emerald">To pay a ticket</p>
-            <p className="mt-1">Send <b>{money(initial.ticket_price)}</b> per ticket:</p>
+            <p className="mt-1">We suggest Zelle or Venmo (no fees). Send <b>{money(initial.ticket_price)}</b> per ticket:</p>
             <div className="mt-1">
               <PayOptions zelle={initial.zelle_email} venmo={initial.venmo_handle} example={formatTicket(tickets.find((t) => !t.paid)!.no)} />
             </div>

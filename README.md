@@ -18,7 +18,7 @@ Every ticket has its own number, **ICCR-1 through ICCR-313**.
 Payments are matched by hand (Zelle has no API): look at the bank, find the ticket number in the memo, mark it paid.
 
 ## Card payments (optional until configured)
-Set `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET`. In Stripe, add a webhook endpoint `https://<your-site>/api/stripe/webhook`
+Set `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET` (the publishable `pk_` key is not needed: we use hosted Stripe Checkout). For Apple Pay, add the site domain under Stripe -> Settings -> Payment methods -> Apple Pay; Google Pay needs nothing. In Stripe, add a webhook endpoint `https://<your-site>/api/stripe/webhook`
 for `checkout.session.completed` and `checkout.session.async_payment_succeeded`. Apple Pay and Google Pay appear automatically
 in Stripe Checkout when enabled under Stripe -> Settings -> Payment methods. Donors can pay by card from the pledge screen,
 from `/status`, or at `/pay` using a ticket number someone handed them. Paid tickets are marked automatically.

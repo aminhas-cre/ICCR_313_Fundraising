@@ -81,9 +81,12 @@ export default function PayClient({ initial }: { initial: string }) {
               </p>
               <p className="text-xs text-ink/70">{chosen.length} ticket{chosen.length > 1 ? "s" : ""} × ${price}{fee ? ` + ${dollars(fee)} fee` : ""}</p>
               {cardOn ? (
+                <>
+                <p className="mt-3 rounded-xl bg-sand-dark p-3 text-sm">We suggest <b>Zelle or Venmo</b> (no fees, 100% reaches ICCR). Card, Apple Pay and Google Pay work too.</p>
                 <button className="btn-primary mt-4 w-full !py-3 text-base" onClick={pay} disabled={busy}>
                   {busy ? "Opening secure checkout…" : "Pay by card, Apple Pay or Google Pay"}
                 </button>
+                </>
               ) : (
                 <p className="mt-4 rounded-xl bg-sand-dark p-3 text-sm">Card payments aren&apos;t available yet. Please pay by Zelle or Venmo (@ICCR1) and put the ticket number in the memo.</p>
               )}

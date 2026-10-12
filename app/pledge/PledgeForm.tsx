@@ -45,13 +45,13 @@ export default function PledgeForm({ price, zelle, venmo, left, mode, initialCou
     const payBlock = (
       <section className={`rounded-2xl p-6 ${payNow ? "bg-emerald text-sand" : "bg-white shadow-sm"}`} aria-label="How to pay">
         <h2 className="font-serif text-xl font-semibold">{payNow ? `Pay now: ${money(done.due)}` : "When you're ready to pay"}</h2>
-        <p className={`mt-3 text-sm font-semibold ${payNow ? "" : "text-ink/90"}`}>Pay by Zelle or Venmo (free for ICCR):</p>
+        <p className={`mt-3 text-sm font-semibold ${payNow ? "" : "text-ink/90"}`}>We suggest Zelle or Venmo (no fees, 100% reaches ICCR):</p>
         <div className="mt-1">
           <PayOptions zelle={done.zelle_email} venmo={done.venmo_handle} tone={payNow ? "dark" : "light"} example={formatTicket(done.tickets[0])} />
         </div>
         {done.card_enabled && (
           <>
-            <p className={`mt-4 text-sm font-semibold ${payNow ? "" : "text-ink/90"}`}>Prefer a card?</p>
+            <p className={`mt-4 text-sm font-semibold ${payNow ? "" : "text-ink/90"}`}>Or pay by card, Apple Pay or Google Pay (small processing fee):</p>
             <a
               href={`/pay?t=${nums}`}
               className={`mt-1 inline-flex min-h-[44px] w-full items-center justify-center rounded-full px-5 py-3 text-sm font-semibold ${
@@ -160,7 +160,7 @@ export default function PledgeForm({ price, zelle, venmo, left, mode, initialCou
       <button className="btn-primary w-full !py-3 text-base" type="submit" disabled={busy}>
         {busy ? "Saving…" : `Pledge ${money(f.ticket_count * price)}`}
       </button>
-      <p className="text-center text-xs text-ink/70">You pay by Zelle ({zelle}){venmo ? ` or Venmo (@${venmo})` : ""} after you pledge.</p>
+      <p className="text-center text-xs text-ink/70">After you pledge, we suggest paying by Zelle ({zelle}){venmo ? ` or Venmo (@${venmo})` : ""}. Card, Apple Pay and Google Pay are options too.</p>
     </form>
   );
 }
