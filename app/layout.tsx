@@ -14,10 +14,10 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "313: Support Your Castle Rock Muslim Community Center",
   description:
-    "Support your Castle Rock Muslim Community Center. 313 people giving $250 each to keep the Islamic Center of Castle Rock strong. Pay for your ticket, then bring your family and friends.",
+    "Support your Castle Rock Muslim Community Center. 313 people giving $250 each to keep the Islamic Center of Castle Rock strong. Donate, then bring your family and friends.",
   openGraph: {
     title: "ICCR 313: Support Your Castle Rock Muslim Community Center",
-    description: "313 people giving $250 each to keep the Islamic Center of Castle Rock strong. Pay for your ticket, then bring your family and friends.",
+    description: "313 people giving $250 each to keep the Islamic Center of Castle Rock strong. Donate, then bring your family and friends.",
     type: "website",
   },
   twitter: { card: "summary_large_image" },

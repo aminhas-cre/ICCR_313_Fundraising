@@ -21,7 +21,7 @@ export default async function Home() {
   const more = s.supporters.length - shown.length;
 
   const FAQ: [string, string][] = [
-    ["Who should I pledge for?", `Start with yourself: pay for your own ticket. Then pledge tickets for your family and friends. Each ticket has its own ICCR number, so you can send a person their number and they pay that exact ticket. Bringing your close ones in is what makes this work.`],
+    ["Who should I pledge for?", `Start with yourself: make your own donation. Then pledge tickets for your family and friends. Each ticket has its own ICCR number, so you can send a person their number and they pay that exact ticket. Bringing your close ones in is what makes this work.`],
     ["How do I pay?", `Pledge online and you'll get your ICCR ticket numbers. Then send ${fmt(cfg.ticket_price)} per ticket by Zelle to ${cfg.zelle_email}${cfg.venmo_handle ? ` or Venmo @${cfg.venmo_handle}` : ""} and put the ticket number in the memo (or Venmo note). Both are free for ICCR.${cfg.launchgood_url ? ` You can also give ${fmt(cfg.ticket_price)} per ticket on our LaunchGood page (use the same email you pledged with).` : ""} We match payments by hand, so it can take a day or two to show.`],
     ["Does every ticket have its own number?", "Yes. If you pledge 5 tickets you get 5 numbers. You can pay for them yourself or give a ticket to someone else, like an uncle, who sends the Zelle or Venmo with that ticket's number in the memo."],
     ["How do I know my pledge was paid?", "Use Check my pledge with your email. It lists each of your tickets and whether it's been paid."],
@@ -46,7 +46,7 @@ export default async function Home() {
     <div className="mx-auto mt-6 max-w-xl text-left">
       <CtaButtons price={cfg.ticket_price} />
       <p className="mt-4 rounded-2xl bg-sand-dark p-4 text-sm text-ink/90">
-        <b className="text-emerald">Start with yourself, then bring your people.</b> Pay for your own ticket first. Then
+        <b className="text-emerald">Start with yourself, then bring your people.</b> Make your own donation first. Then
         pledge tickets for your family and friends and send each person their ICCR number so they can pay it. Every one
         of us has close ones who would want to be part of this, so please bring them with you.
       </p>
@@ -82,7 +82,7 @@ export default async function Home() {
           </li>
           <li className="flex gap-3">
             <span className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-sand font-bold text-emerald" aria-hidden="true">4</span>
-            <span><b>Bring your people.</b> Pay for your own ticket first, then pledge tickets for your family and friends. Send each person their ICCR number and share the link to this page so they can join too.</span>
+            <span><b>Bring your people.</b> Make your own donation first, then pledge tickets for your family and friends. Send each person their ICCR number and share the link to this page so they can join too.</span>
           </li>
         </ol>
         {cfg.zelle_note && <p className="mt-4 text-xs text-sand/70">{cfg.zelle_note}</p>}

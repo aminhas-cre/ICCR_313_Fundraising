@@ -136,7 +136,7 @@ export default function PledgeForm({ price, zelle, venmo, launchgood, cardEnable
             Give each of your family and friends one ticket number from above. They pay that exact ticket, so tell them to
             put the number in the Zelle memo or Venmo note{done.card_enabled ? " or use the pay link" : ""}.
           </p>
-          <a className="btn-secondary mt-3 w-full" href="/pledge?pay=1">Pay for my own ticket too</a>
+          <a className="btn-secondary mt-3 w-full" href="/pledge?pay=1">Donate now too</a>
         </section>
       ) : (
         <section className="rounded-2xl border-2 border-emerald bg-white p-5 shadow-sm">
@@ -183,7 +183,7 @@ export default function PledgeForm({ price, zelle, venmo, launchgood, cardEnable
   return (
     <form onSubmit={submit} className="mt-6 space-y-5 rounded-2xl bg-white p-5 shadow-sm sm:p-6">
       <div>
-        <p id="qty-label" className="text-sm font-semibold">How many tickets?</p>
+        <p id="qty-label" className="text-sm font-semibold">How many {money(price)} donations?</p>
         <div className="mt-2 flex items-center gap-3" role="group" aria-labelledby="qty-label">
           <button type="button" className="btn-secondary !h-12 !w-12 !p-0 text-xl" aria-label="One fewer ticket" onClick={() => setCount(f.ticket_count - 1)} disabled={f.ticket_count <= 1}>−</button>
           <input

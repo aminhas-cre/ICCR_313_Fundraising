@@ -11,10 +11,10 @@ export default async function PledgePage({ searchParams }: { searchParams: { pay
   const cfg = await getSettings();
   const { count } = await getSupabaseServerClient().from("tickets").select("ticket_no", { count: "exact", head: true });
   const left = Math.max(0, cfg.goal_donors - (count ?? 0));
-  // "self" = Step 1 (pay for my own ticket), "others" = Step 2 (family & friends).
+  // "self" = Step 1 (donate now for myself), "others" = Step 2 (family & friends).
   const mode: "self" | "others" | "default" = searchParams.pay === "1" ? "self" : searchParams.for === "others" ? "others" : "default";
 
-  const heading = mode === "self" ? "Pay for my ticket" : mode === "others" ? "Pledge for family & friends" : `Be one of the ${cfg.goal_donors}`;
+  const heading = mode === "self" ? "Donate Now" : mode === "others" ? "Pledge for family & friends" : `Be one of the ${cfg.goal_donors}`;
   return (
     <>
       <PublicHeader />
@@ -24,8 +24,8 @@ export default async function PledgePage({ searchParams }: { searchParams: { pay
           <>
             {mode === "self" && (
               <p className="mt-2 text-sm text-ink/80">
-                Step 1: cover your own ${cfg.ticket_price} ticket. You&apos;ll get your ICCR ticket number. After this, please
-                pledge tickets for your family and friends too. It makes a real difference.
+                Give in increments of ${cfg.ticket_price}. Each ${cfg.ticket_price} is one ticket with its own ICCR number. After this,
+                please pledge tickets for your family and friends too. It makes a real difference.
               </p>
             )}
             {mode === "others" && (
@@ -35,13 +35,13 @@ export default async function PledgePage({ searchParams }: { searchParams: { pay
                   Send each person their number and they pay that exact ticket (Zelle or Venmo memo, or card).
                 </p>
                 <p className="rounded-xl bg-sand-dark p-3">
-                  Haven&apos;t covered your own ticket yet? <a className="font-semibold text-emerald underline" href="/pledge?pay=1">Pay for yours first</a>.
+                  Haven&apos;t donated yet? <a className="font-semibold text-emerald underline" href="/pledge?pay=1">Donate now</a>.
                 </p>
               </div>
             )}
             {mode === "default" && (
               <p className="mt-2 text-sm text-ink/80">
-                Choose how many tickets you&apos;d like. Each is ${cfg.ticket_price} and gets its own ICCR number. Pay for your own
+                Choose how many tickets you&apos;d like. Each is ${cfg.ticket_price} and gets its own ICCR number. Donate for yourself
                 first, then pledge tickets for your family and friends.
               </p>
             )}
