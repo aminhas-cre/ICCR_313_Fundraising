@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-// The two-step ask: pay for yourself, then pledge for family & friends. Used in the hero and again after the story.
+// The two-step ask: donate yourself, then pledge for family & friends. Used in the hero and again after the story.
 export default function CtaButtons({ price }: { price: number }) {
   return (
     <div className="grid gap-3 sm:grid-cols-2">
@@ -9,8 +9,8 @@ export default function CtaButtons({ price }: { price: number }) {
         className="block rounded-2xl bg-emerald px-5 py-4 text-sand shadow-sm transition hover:bg-emerald-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald focus-visible:ring-offset-2"
       >
         <span className="text-xs font-bold uppercase tracking-wider text-gold-light">Step 1</span>
-        <span className="block font-serif text-xl font-semibold">Pay for my ticket</span>
-        <span className="mt-0.5 block text-sm text-sand/85">Cover your own ${price.toLocaleString("en-US")} first</span>
+        <span className="block font-serif text-xl font-semibold">Donate Now</span>
+        <span className="mt-0.5 block text-sm text-sand/85">Give in increments of ${price.toLocaleString("en-US")}</span>
       </Link>
       <Link
         href="/pledge?for=others"

@@ -47,8 +47,8 @@ export function pledgeConfirmation(i: PledgeMailInput) {
     ...(i.payUrl ? [`Or pay by card, Apple Pay or debit: ${i.payUrl}`] : []),
     ...(i.chosenMethods.length ? [`You told us you plan to pay by: ${i.chosenMethods.join(", ")}.`] : []),
     "",
-    "PAY FOR YOURS FIRST, THEN BRING YOUR CLOSE ONES",
-    "Please cover your own ticket first. Then, highly recommended: pledge tickets for your family and friends and send each person their ICCR number so they can pay it.",
+    "DONATE FIRST, THEN BRING YOUR CLOSE ONES",
+    "Please make your own donation first. Then, highly recommended: pledge tickets for your family and friends and send each person their ICCR number so they can pay it.",
     `Pledge for family & friends: ${i.familyUrl}`,
     "",
     `Check which of your tickets are paid any time with your email: ${i.statusUrl}`,
@@ -69,8 +69,8 @@ export function pledgeConfirmation(i: PledgeMailInput) {
 </div>
 <p><b>How to pay:</b> Zelle to <b>${esc(i.zelleEmail)}</b>${i.venmoHandle ? ` or Venmo <a href="https://venmo.com/u/${esc(i.venmoHandle)}">@${esc(i.venmoHandle)}</a>` : ""} and put the ticket number in the memo or note.${i.launchgoodUrl ? `<br>Or give ${esc(money(i.price))} per ticket on <a href="${esc(i.launchgoodUrl)}">LaunchGood</a> (use the same email you pledged with and, if there is a comment box, add your ticket number).` : ""}${i.payUrl ? `<br>Or <a href="${esc(i.payUrl)}">pay by card, Apple Pay or debit</a>.` : ""}${i.chosenMethods.length ? `<br><i>You told us you plan to pay by: ${esc(i.chosenMethods.join(", "))}.</i>` : ""}</p>
 <div style="background:#0f4a3c;color:#f6f1e7;border-radius:10px;padding:14px 16px;margin:16px 0">
-<p style="margin:0 0 6px"><b>Pay for yours first, then bring your close ones</b></p>
-<p style="margin:0">Please cover your own ticket first. Then, <b>highly recommended</b>: pledge tickets for your family and friends and send each person their ICCR number so they can pay it.</p>
+<p style="margin:0 0 6px"><b>Donate first, then bring your close ones</b></p>
+<p style="margin:0">Please make your own donation first. Then, <b>highly recommended</b>: pledge tickets for your family and friends and send each person their ICCR number so they can pay it.</p>
 <p style="margin:10px 0 0"><a style="color:#f6f1e7;font-weight:bold" href="${esc(i.familyUrl)}">Pledge for family &amp; friends</a></p>
 </div>
 <p>Check which of your tickets are paid any time with your email:<br><a href="${esc(i.statusUrl)}">${esc(i.statusUrl)}</a></p>
