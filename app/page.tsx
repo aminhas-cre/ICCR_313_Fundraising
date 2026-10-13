@@ -28,28 +28,29 @@ export default async function Home() {
     ["Where does the money go?", "A permanent prayer space, youth and community programs, Islamic education, and sadaqah jariyah that keeps giving long after us."],
   ];
 
-  const hero = (
-    <section className="py-10 text-center sm:py-14">
+  const title = (
+    <section className="pb-6 pt-10 text-center sm:pb-8 sm:pt-14">
       <p className="text-sm font-semibold uppercase tracking-widest text-gold-ink">Islamic Center of Castle Rock</p>
       <h1 className="mt-2 font-serif text-6xl font-bold text-emerald sm:text-7xl">313</h1>
       <p className="mx-auto mt-2 max-w-xl font-serif text-2xl leading-snug text-emerald sm:text-3xl">
         Support Your Castle Rock Muslim Community Center
       </p>
-      {full ? (
-        <p className="mx-auto mt-6 max-w-md rounded-2xl bg-white p-4 text-sm font-semibold text-emerald shadow-sm">
-          We hit {cfg.goal_donors}, alhamdulillah. The {cfg.goal_donors} are the spark, not the ceiling.
-        </p>
-      ) : (
-        <div className="mx-auto mt-6 max-w-xl text-left">
-          <CtaButtons price={cfg.ticket_price} />
-          <p className="mt-4 rounded-2xl bg-sand-dark p-4 text-sm text-ink/90">
-            <b className="text-emerald">Start with yourself, then bring your people.</b> Pay for your own ticket first. Then
-            pledge tickets for your family and friends and send each person their ICCR number so they can pay it. Every one
-            of us has close ones who would want to be part of this, so please bring them with you.
-          </p>
-        </div>
-      )}
     </section>
+  );
+
+  const ask = full ? (
+    <p className="mx-auto mt-6 max-w-md rounded-2xl bg-white p-4 text-center text-sm font-semibold text-emerald shadow-sm">
+      We hit {cfg.goal_donors}, alhamdulillah. The {cfg.goal_donors} are the spark, not the ceiling.
+    </p>
+  ) : (
+    <div className="mx-auto mt-6 max-w-xl text-left">
+      <CtaButtons price={cfg.ticket_price} />
+      <p className="mt-4 rounded-2xl bg-sand-dark p-4 text-sm text-ink/90">
+        <b className="text-emerald">Start with yourself, then bring your people.</b> Pay for your own ticket first. Then
+        pledge tickets for your family and friends and send each person their ICCR number so they can pay it. Every one
+        of us has close ones who would want to be part of this, so please bring them with you.
+      </p>
+    </div>
   );
 
   const rest = (
@@ -134,21 +135,15 @@ export default async function Home() {
     <>
       <PublicHeader />
       <main className="mx-auto max-w-3xl px-4 pb-16">
-        {hero}
-        {/* Order: ask -> proof of progress -> why -> ask again -> how -> who else gave -> share -> FAQ */}
-        <section className="space-y-6 rounded-2xl bg-white p-6 shadow-sm sm:p-8" aria-label="Progress">
+        {title}
+        {/* Order: slogan -> why (story) -> ask -> progress -> how -> who else gave -> share -> FAQ */}
+        <CampaignStory goal={cfg.goal_donors} price={cfg.ticket_price} goalAmount={s.goalAmount} />
+        {ask}
+        <section className="mt-8 space-y-6 rounded-2xl bg-white p-6 shadow-sm sm:p-8" aria-label="Progress">
           <Thermometer label="Pledged" tickets={s.pledgedTickets} goalTickets={s.goalTickets} amount={s.pledgedAmount} goalAmount={s.goalAmount} tone="gold" />
           <Thermometer label="Paid" tickets={s.paidTickets} goalTickets={s.goalTickets} amount={s.paidAmount} goalAmount={s.goalAmount} tone="emerald" />
           {!full && <p className="text-sm font-semibold text-emerald">{s.numbersLeft} ticket{s.numbersLeft === 1 ? "" : "s"} left. Be one of the first.</p>}
         </section>
-        <div className="mt-8">
-          <CampaignStory goal={cfg.goal_donors} price={cfg.ticket_price} goalAmount={s.goalAmount} />
-        </div>
-        {!full && (
-          <div className="mx-auto mt-6 max-w-xl">
-            <CtaButtons price={cfg.ticket_price} />
-          </div>
-        )}
         {rest}
       </main>
     </>
