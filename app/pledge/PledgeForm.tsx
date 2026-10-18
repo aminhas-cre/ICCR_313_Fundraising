@@ -67,7 +67,7 @@ export default function PledgeForm({ price, zelle, venmo, launchgood, cardEnable
         node: (
           <>
             <p className={`text-sm font-semibold ${sub}`}>Zelle <span className="font-normal">(we suggest this: no fees, 100% reaches ICCR)</span></p>
-            <PayOptions zelle={done.zelle_email} venmo={done.venmo_handle} show="zelle" tone={tone} example={ex} />
+            <PayOptions zelle={done.zelle_email} venmo={done.venmo_handle} show="zelle" tone={tone} example={ex} noun="pledge" />
           </>
         ),
       },
@@ -77,7 +77,7 @@ export default function PledgeForm({ price, zelle, venmo, launchgood, cardEnable
             node: (
               <>
                 <p className={`text-sm font-semibold ${sub}`}>Venmo <span className="font-normal">(we suggest this: no fees, 100% reaches ICCR)</span></p>
-                <PayOptions zelle={done.zelle_email} venmo={done.venmo_handle} show="venmo" tone={tone} example={ex} />
+                <PayOptions zelle={done.zelle_email} venmo={done.venmo_handle} show="venmo" tone={tone} example={ex} noun="pledge" />
               </>
             ),
           }]
@@ -88,7 +88,7 @@ export default function PledgeForm({ price, zelle, venmo, launchgood, cardEnable
             node: (
               <>
                 <p className={`mb-1 text-sm font-semibold ${sub}`}>LaunchGood</p>
-                <LaunchGoodLink url={done.launchgood_url} price={done.price} tone={tone} />
+                <LaunchGoodLink url={done.launchgood_url} price={done.price} tone={tone} noun="pledge" />
               </>
             ),
           }]
@@ -133,7 +133,7 @@ export default function PledgeForm({ price, zelle, venmo, launchgood, cardEnable
         <section className="rounded-2xl border-2 border-emerald bg-white p-5 shadow-sm">
           <h2 className="font-serif text-xl font-semibold text-emerald">Send each person their number</h2>
           <p className="mt-1 text-sm text-ink/80">
-            Give each of your family and friends one ticket number from above. They pay that exact ticket, so tell them to
+            Give each of your family and friends one pledge number from above. They pay that exact pledge, so tell them to
             put the number in the Zelle memo or Venmo note{done.card_enabled ? " or use the pay link" : ""}.
           </p>
           <a className="btn-secondary mt-3 w-full" href="/pledge?pay=1">Donate now too</a>
@@ -142,7 +142,7 @@ export default function PledgeForm({ price, zelle, venmo, launchgood, cardEnable
         <section className="rounded-2xl border-2 border-emerald bg-white p-5 shadow-sm">
           <h2 className="font-serif text-xl font-semibold text-emerald">Now bring your close ones</h2>
           <p className="mt-1 text-sm text-ink/80">
-            You&apos;ve taken care of yours. The most helpful thing you can do next is pledge tickets for your family and
+            You&apos;ve taken care of yours. The most helpful thing you can do next is pledge for your family and
             friends and send each person their ICCR number. Highly recommended.
           </p>
           <a className="btn-primary mt-3 w-full" href="/pledge?for=others">Pledge for family &amp; friends</a>
@@ -151,17 +151,17 @@ export default function PledgeForm({ price, zelle, venmo, launchgood, cardEnable
     return (
       <div className="mt-6 space-y-5">
         <section className="rounded-2xl bg-white p-6 shadow-sm" aria-live="polite">
-          <p className="text-sm text-ink/70">JazakAllahu khayran. You pledged {done.tickets.length} ticket{done.tickets.length > 1 ? "s" : ""}:</p>
+          <p className="text-sm text-ink/70">JazakAllahu khayran. You made {done.tickets.length} pledge{done.tickets.length > 1 ? "s" : ""}:</p>
           <ul className="mt-3 flex flex-wrap gap-2">
             {done.tickets.map((n) => (
               <li key={n} className="rounded-full bg-sand px-4 py-2 font-serif text-xl font-bold text-emerald">{formatTicket(n)}</li>
             ))}
           </ul>
           {done.all_tickets.length > done.tickets.length && (
-            <p className="mt-3 text-sm text-ink/80">You now hold {done.all_tickets.length} tickets in total.</p>
+            <p className="mt-3 text-sm text-ink/80">You now hold {done.all_tickets.length} pledges in total.</p>
           )}
           <p className="mt-4 text-sm text-ink/80">
-            <b>Every ticket has its own number.</b> Whoever pays a ticket puts that ticket&apos;s number in the memo. For
+            <b>Every pledge has its own number.</b> Whoever pays a pledge puts that pledge&apos;s number in the memo. For
             example, if you give your uncle <b>{formatTicket(example)}</b>, he sends {money(done.price)} by Zelle or Venmo with{" "}
             <b>{formatTicket(example)}</b> in the memo.
           </p>
@@ -185,20 +185,20 @@ export default function PledgeForm({ price, zelle, venmo, launchgood, cardEnable
       <div>
         <p id="qty-label" className="text-sm font-semibold">How many {money(price)} donations?</p>
         <div className="mt-2 flex items-center gap-3" role="group" aria-labelledby="qty-label">
-          <button type="button" className="btn-secondary !h-12 !w-12 !p-0 text-xl" aria-label="One fewer ticket" onClick={() => setCount(f.ticket_count - 1)} disabled={f.ticket_count <= 1}>−</button>
+          <button type="button" className="btn-secondary !h-12 !w-12 !p-0 text-xl" aria-label="One fewer pledge" onClick={() => setCount(f.ticket_count - 1)} disabled={f.ticket_count <= 1}>−</button>
           <input
-            aria-label="Number of tickets"
+            aria-label="Number of pledges"
             inputMode="numeric"
             className="input !h-12 !w-20 text-center !text-lg"
             value={f.ticket_count}
             onChange={(e) => setCount(Number(e.target.value.replace(/\D/g, "")) || 1)}
           />
-          <button type="button" className="btn-secondary !h-12 !w-12 !p-0 text-xl" aria-label="One more ticket" onClick={() => setCount(f.ticket_count + 1)} disabled={f.ticket_count >= max}>+</button>
+          <button type="button" className="btn-secondary !h-12 !w-12 !p-0 text-xl" aria-label="One more pledge" onClick={() => setCount(f.ticket_count + 1)} disabled={f.ticket_count >= max}>+</button>
         </div>
         <p className="mt-2 font-serif text-2xl font-bold text-emerald" aria-live="polite">
-          {f.ticket_count} ticket{f.ticket_count > 1 ? "s" : ""} = {money(f.ticket_count * price)}
+          {f.ticket_count} pledge{f.ticket_count > 1 ? "s" : ""} = {money(f.ticket_count * price)}
         </p>
-        <p className="text-xs text-ink/70">{left} ticket{left === 1 ? "" : "s"} still available</p>
+        <p className="text-xs text-ink/70">{left} pledge{left === 1 ? "" : "s"} still available</p>
       </div>
       <div>
         <label htmlFor="full_name" className="block text-sm font-semibold">Full name</label>
@@ -207,7 +207,7 @@ export default function PledgeForm({ price, zelle, venmo, launchgood, cardEnable
       <div>
         <label htmlFor="email" className="block text-sm font-semibold">Email</label>
         <input id="email" type="email" className="input mt-1 !py-3" value={f.email} onChange={set("email")} autoComplete="email" required />
-        <p className="mt-1 text-xs text-ink/70">Used to confirm your pledge and to look up your tickets later. Never shown publicly.</p>
+        <p className="mt-1 text-xs text-ink/70">Used to confirm your pledge and to look up your pledges later. Never shown publicly.</p>
       </div>
       <div>
         <label htmlFor="phone" className="block text-sm font-semibold">Phone <span className="font-normal text-ink/70">(optional)</span></label>
@@ -229,7 +229,7 @@ export default function PledgeForm({ price, zelle, venmo, launchgood, cardEnable
       <button className="btn-primary w-full !py-3 text-base" type="submit" disabled={busy}>
         {busy ? "Saving…" : `Pledge ${money(f.ticket_count * price)}`}
       </button>
-      <p className="text-center text-xs text-ink/70">{askPay ? "You'll see how to pay right after you pledge." : "Send each person their ticket number after you pledge."}</p>
+      <p className="text-center text-xs text-ink/70">{askPay ? "You'll see how to pay right after you pledge." : "Send each person their pledge number after you pledge."}</p>
     </form>
   );
 }

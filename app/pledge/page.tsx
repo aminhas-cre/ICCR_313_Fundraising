@@ -24,15 +24,15 @@ export default async function PledgePage({ searchParams }: { searchParams: { pay
           <>
             {mode === "self" && (
               <p className="mt-2 text-sm text-ink/80">
-                Give in increments of ${cfg.ticket_price}. Each ${cfg.ticket_price} is one ticket with its own ICCR number. After this,
-                please pledge tickets for your family and friends too. It makes a real difference.
+                Give in increments of ${cfg.ticket_price}. Each ${cfg.ticket_price} is one pledge with its own ICCR number. After this,
+                please pledge for your family and friends too. It makes a real difference.
               </p>
             )}
             {mode === "others" && (
               <div className="mt-2 space-y-2 text-sm text-ink/80">
                 <p>
-                  Step 2, highly recommended: reserve tickets for the people close to you. Each ticket gets its own ICCR number.
-                  Send each person their number and they pay that exact ticket (Zelle or Venmo memo, or card).
+                  Step 2, highly recommended: reserve pledges for the people close to you. Each pledge gets its own ICCR number.
+                  Send each person their number and they pay that exact pledge (Zelle or Venmo memo, or card).
                 </p>
                 <p className="rounded-xl bg-sand-dark p-3">
                   Haven&apos;t donated yet? <a className="font-semibold text-emerald underline" href="/pledge?pay=1">Donate now</a>.
@@ -41,8 +41,8 @@ export default async function PledgePage({ searchParams }: { searchParams: { pay
             )}
             {mode === "default" && (
               <p className="mt-2 text-sm text-ink/80">
-                Choose how many tickets you&apos;d like. Each is ${cfg.ticket_price} and gets its own ICCR number. Donate for yourself
-                first, then pledge tickets for your family and friends.
+                Choose how many pledges you&apos;d like. Each is ${cfg.ticket_price} and gets its own ICCR number. Donate for yourself
+                first, then pledge for your family and friends.
               </p>
             )}
             <PledgeForm
@@ -58,7 +58,7 @@ export default async function PledgePage({ searchParams }: { searchParams: { pay
           </>
         ) : (
           <p className="mt-4 rounded-2xl bg-white p-6 shadow-sm">
-            All {cfg.goal_donors} founding tickets are taken, alhamdulillah. The {cfg.goal_donors} are the spark, not the
+            All {cfg.goal_donors} founding pledges are taken, alhamdulillah. The {cfg.goal_donors} are the spark, not the
             ceiling. Jazakum Allahu khayran!
           </p>
         )}
