@@ -11,12 +11,14 @@ export default function PayOptions({
   tone = "light",
   example,
   show = "both",
+  noun = "ticket",
 }: {
   zelle: string;
   venmo: string;
   tone?: "light" | "dark";
   example?: string;
   show?: "zelle" | "venmo" | "both";
+  noun?: string; // "ticket" on most screens, "pledge" on the Pledge page
 }) {
   const dark = tone === "dark";
   const showZelle = show !== "venmo";
@@ -57,8 +59,8 @@ export default function PayOptions({
         </details>
       )}
       <p className={`mt-2 ${dark ? "" : "text-ink/90"}`}>
-        Put the <b>ticket number</b> in the {show === "zelle" ? "Zelle memo" : show === "venmo" ? "Venmo note" : venmo ? "Zelle memo or Venmo note" : "Zelle memo"}
-        {example ? <>, for example <b>{example}</b></> : ""}. Several tickets in one payment? List them all.
+        Put the <b>{noun} number</b> in the {show === "zelle" ? "Zelle memo" : show === "venmo" ? "Venmo note" : venmo ? "Zelle memo or Venmo note" : "Zelle memo"}
+        {example ? <>, for example <b>{example}</b></> : ""}. Several {noun}s in one payment? List them all.
       </p>
     </div>
   );

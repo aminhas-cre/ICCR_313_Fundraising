@@ -49,18 +49,18 @@ export default function PayChoice({
       <div className="mt-3 space-y-3">
         <Card {...card("zelle")} title="Zelle" badge="We suggest this">
           <p className="mb-1 text-sm text-ink/80">No fees, so 100% of your gift reaches ICCR.</p>
-          <PayOptions zelle={zelle} venmo={venmo} show="zelle" example="ICCR-2" />
+          <PayOptions zelle={zelle} venmo={venmo} show="zelle" example="ICCR-2" noun="pledge" />
         </Card>
         {venmo && (
           <Card {...card("venmo")} title="Venmo" badge="We suggest this">
             <p className="mb-1 text-sm text-ink/80">No fees, so 100% of your gift reaches ICCR.</p>
-            <PayOptions zelle={zelle} venmo={venmo} show="venmo" example="ICCR-2" />
+            <PayOptions zelle={zelle} venmo={venmo} show="venmo" example="ICCR-2" noun="pledge" />
           </Card>
         )}
         {launchgood && (
           <Card {...card("launchgood")} title="LaunchGood">
-            <p className="mb-2 text-sm text-ink/80">Give on our LaunchGood page. It still counts as your ${price.toLocaleString("en-US")} ticket.</p>
-            <LaunchGoodLink url={launchgood} price={price} />
+            <p className="mb-2 text-sm text-ink/80">Give on our LaunchGood page. It still counts as your ${price.toLocaleString("en-US")} pledge.</p>
+            <LaunchGoodLink url={launchgood} price={price} noun="pledge" />
           </Card>
         )}
         <Card {...card("card")} title="card, Apple Pay or debit" disabled={!cardEnabled}>
