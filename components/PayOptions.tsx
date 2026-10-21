@@ -27,7 +27,7 @@ export default function PayOptions({
     <div className="text-sm">
       <ul className="space-y-2">
         {showZelle && <li>
-          <b>Zelle:</b> <span className="break-all font-semibold">{zelle}</span>
+          <b>Zelle:</b> <span className="break-all text-xs font-semibold sm:text-sm">{zelle}</span>
         </li>}
         {showVenmo && (
           <li>

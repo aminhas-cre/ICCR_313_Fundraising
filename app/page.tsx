@@ -60,12 +60,12 @@ export default async function Home() {
         <ol className="mt-4 space-y-4">
           <li className="flex gap-3">
             <span className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-sand font-bold text-emerald" aria-hidden="true">1</span>
-            <span><b>Pledge.</b> Choose your tickets, {fmt(cfg.ticket_price)} each, and get your ICCR ticket numbers for the tickets you pledged.</span>
+            <span><b>Donate for yourself.</b></span>
           </li>
           <li className="flex gap-3">
             <span className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-sand font-bold text-emerald" aria-hidden="true">2</span>
             <span>
-              <b>Put the ticket number in the memo.</b> That&apos;s how we match your payment.
+              <b>Put the ticket number in the memo.</b>
               <span className="mt-2 block rounded-xl bg-sand p-3 text-emerald">
                 <PayOptions zelle={cfg.zelle_email} venmo={cfg.venmo_handle} example="ICCR-2" />
                 {cfg.launchgood_url && (
@@ -78,11 +78,11 @@ export default async function Home() {
           </li>
           <li className="flex gap-3">
             <span className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-sand font-bold text-emerald" aria-hidden="true">3</span>
-            <span><b>Track it.</b> Use <Link href="/status" className="underline">Check my pledge</Link> to see which tickets have been paid. Tick the box next to each ticket you&apos;ve passed on to someone so you can keep track.</span>
+            <span><b>Pledge to gather 5 or more donations</b> from within your circle of family and friends.</span>
           </li>
           <li className="flex gap-3">
             <span className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-sand font-bold text-emerald" aria-hidden="true">4</span>
-            <span><b>Bring your people.</b> Make your own donation first, then pledge tickets for your family and friends. Send each person their ICCR number and share the link to this page so they can join too.</span>
+            <span><b>Send each person their unique <span className="whitespace-nowrap">ICCR-#</span></b> and <Link href="/status" className="font-semibold underline">track your pledges</Link>.</span>
           </li>
         </ol>
         {cfg.zelle_note && <p className="mt-4 text-xs text-sand/70">{cfg.zelle_note}</p>}
