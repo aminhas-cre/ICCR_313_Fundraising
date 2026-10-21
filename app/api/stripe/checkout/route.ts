@@ -26,7 +26,7 @@ export async function POST(req: Request) {
   }
 
   const sb = getSupabaseServerClient();
-  const { data, error } = await sb.from("tickets").select("ticket_no, paid").in("ticket_no", nums);
+  const { data, error } = await sb.from("tickets").select("ticket_no, paid, donors(full_name)").in("ticket_no", nums);
   if (error) return NextResponse.json({ error: "Could not start checkout." }, { status: 500 });
   const rows = new Map((data ?? []).map((r) => [r.ticket_no as number, r]));
   const unknown = nums.filter((n) => !rows.has(n));
@@ -42,6 +42,7 @@ export async function POST(req: Request) {
       tickets: nums,
       pricePerTicketCents: per,
       feeCents: b.coverFee ? feeCents(per * nums.length) : 0,
+      pledgers: Array.from(new Set((data ?? []).map((r: any) => String(r.donors?.full_name ?? "").trim()).filter(Boolean))).join(", ").slice(0, 400),
       successUrl: `${base}/thanks`,
       cancelUrl: `${base}/pay?t=${nums.join(",")}&canceled=1`,
     });

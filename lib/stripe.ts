@@ -12,6 +12,7 @@ export interface CheckoutInput {
   tickets: number[];
   pricePerTicketCents: number;
   feeCents: number; // 0 when the donor doesn't cover it
+  pledgers?: string; // names of the people who pledged these tickets, shown in Stripe
   successUrl: string;
   cancelUrl: string;
 }
@@ -35,7 +36,12 @@ export async function createCheckoutSession(i: CheckoutInput): Promise<{ id: str
   const tickets = i.tickets.join(",");
   f.set("metadata[tickets]", tickets);
   f.set("payment_intent_data[metadata][tickets]", tickets);
-  f.set("payment_intent_data[description]", `ICCR 313: ${list}`);
+  const who = i.pledgers ? ` (${i.pledgers})` : "";
+  f.set("payment_intent_data[description]", `ICCR 313: ${list}${who}`);
+  if (i.pledgers) {
+    f.set("metadata[pledgers]", i.pledgers);
+    f.set("payment_intent_data[metadata][pledgers]", i.pledgers);
+  }
 
   const res = await fetch(`${API()}/v1/checkout/sessions`, {
     method: "POST",

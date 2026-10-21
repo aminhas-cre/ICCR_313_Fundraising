@@ -17,7 +17,14 @@ export interface MarkPaidResult {
 export async function markTickets(
   numbers: number[],
   paid: boolean,
-  opts: { method?: PaymentMethod; received_on?: string; memo?: string | null; eventDetail?: string } = {}
+  opts: {
+    method?: PaymentMethod;
+    received_on?: string;
+    memo?: string | null;
+    eventDetail?: string;
+    paidBy?: { name?: string | null; email?: string | null }; // who actually paid (from Stripe)
+    stripePaymentId?: string | null;
+  } = {}
 ): Promise<MarkPaidResult> {
   const sb = getSupabaseServerClient();
   const cfg = await getSettings();
@@ -37,8 +44,18 @@ export async function markTickets(
 
   if (targets.length > 0) {
     const patch = paid
-      ? { paid: true, paid_at: new Date().toISOString(), paid_amount: cfg.ticket_price, pay_method: method, received_on, bank_memo: memo }
-      : { paid: false, paid_at: null, paid_amount: null, pay_method: null, received_on: null, bank_memo: null };
+      ? {
+          paid: true,
+          paid_at: new Date().toISOString(),
+          paid_amount: cfg.ticket_price,
+          pay_method: method,
+          received_on,
+          bank_memo: memo,
+          paid_by_name: opts.paidBy?.name?.trim().slice(0, 120) || null,
+          paid_by_email: opts.paidBy?.email?.trim().toLowerCase().slice(0, 200) || null,
+          stripe_payment_id: opts.stripePaymentId ?? null,
+        }
+      : { paid: false, paid_at: null, paid_amount: null, pay_method: null, received_on: null, bank_memo: null, paid_by_name: null, paid_by_email: null, stripe_payment_id: null };
     const { error } = await sb.from("tickets").update(patch).in("ticket_no", targets);
     if (error) throw new Error(error.message);
     await sb.from("ticket_events").insert(

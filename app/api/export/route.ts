@@ -16,13 +16,13 @@ export async function GET() {
   if (!isAdmin()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const { data, error } = await getSupabaseServerClient()
     .from("tickets")
-    .select("ticket_no, paid, received_on, pay_method, chosen_methods, bank_memo, passed_on, passed_to, donors(full_name, email, phone)")
+    .select("ticket_no, paid, received_on, pay_method, chosen_methods, bank_memo, paid_by_name, paid_by_email, stripe_payment_id, passed_on, passed_to, donors(full_name, email, phone)")
     .order("ticket_no");
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  const header = ["Ticket", "Name", "Email", "Phone", "Status", "Received on", "Method", "Plans to pay by", "Bank memo", "Passed to"];
+  const header = ["Ticket", "Name", "Email", "Phone", "Status", "Received on", "Method", "Plans to pay by", "Paid by", "Paid by email", "Stripe payment", "Bank memo", "Passed to"];
   const lines = (data ?? []).map((t: any) =>
     [formatTicket(t.ticket_no), t.donors?.full_name, t.donors?.email, t.donors?.phone, t.paid ? "Paid" : "Pledged",
-      t.received_on, t.pay_method, (t.chosen_methods ?? []).join(" + "), t.bank_memo, t.passed_on ? t.passed_to ?? "yes" : ""].map(cell).join(",")
+      t.received_on, t.pay_method, (t.chosen_methods ?? []).join(" + "), t.paid_by_name, t.paid_by_email, t.stripe_payment_id, t.bank_memo, t.passed_on ? t.passed_to ?? "yes" : ""].map(cell).join(",")
   );
   return new NextResponse([header.map(cell).join(","), ...lines].join("\n"), {
     headers: { "Content-Type": "text/csv", "Content-Disposition": 'attachment; filename="313-tickets.csv"' },

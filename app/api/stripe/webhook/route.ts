@@ -39,7 +39,13 @@ export async function POST(req: Request) {
 
   const ref = typeof s.payment_intent === "string" ? s.payment_intent : s.id;
   try {
-    const r = await markTickets(numbers, true, { method: "card", memo: `stripe ${ref}`, eventDetail: `card: stripe ${ref}` });
+    const r = await markTickets(numbers, true, {
+      method: "card",
+      memo: `stripe ${ref}`,
+      eventDetail: `card: stripe ${ref}`,
+      paidBy: { name: s.customer_details?.name ?? null, email: s.customer_details?.email ?? null },
+      stripePaymentId: typeof s.payment_intent === "string" ? s.payment_intent : null,
+    });
     // A *different* payment landing on an already-paid ticket (e.g. Zelle arrived first): flag it for a refund.
     // A retry of this same payment is recognised by its memo and stays silent.
     if (r.unchanged.length > 0) {
