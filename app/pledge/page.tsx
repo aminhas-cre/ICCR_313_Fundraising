@@ -53,7 +53,7 @@ export default async function PledgePage({ searchParams }: { searchParams: { pay
               cardEnabled={stripeConfigured()}
               left={left}
               mode={mode}
-              initialCount={mode === "others" ? Math.min(4, left) : 1}
+              initialCount={mode === "others" ? Math.min(5, left) : 1}
             />
           </>
         ) : (
