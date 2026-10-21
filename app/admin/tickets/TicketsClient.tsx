@@ -10,6 +10,9 @@ interface Row {
   pay_method: string | null;
   chosen_methods: string[] | null;
   bank_memo: string | null;
+  paid_by_name: string | null;
+  paid_by_email: string | null;
+  stripe_payment_id: string | null;
   passed_on: boolean;
   passed_to: string | null;
   donors: { full_name: string; email: string | null; phone: string | null } | null;
@@ -172,7 +175,7 @@ export default function TicketsClient() {
                 </td>
                 <td className="text-xs capitalize">{(r.chosen_methods ?? []).join(" + ") || <span className="text-ink/40">none</span>}</td>
                 <td className="whitespace-nowrap text-xs">{r.received_on}{r.pay_method ? ` · ${r.pay_method}` : ""}</td>
-                <td className="text-xs">{r.bank_memo}</td>
+                <td className="text-xs">{r.bank_memo}{r.paid_by_name || r.paid_by_email ? <><br /><span className="text-ink/70">paid by {r.paid_by_name ?? r.paid_by_email}{r.paid_by_name && r.paid_by_email ? ` (${r.paid_by_email})` : ""}</span></> : null}</td>
                 <td className="text-xs">{r.passed_on ? r.passed_to || "yes" : ""}</td>
                 <td className="whitespace-nowrap pr-3">
                   <button className="text-emerald underline disabled:opacity-50" disabled={busy} onClick={() => mark(String(r.ticket_no), !r.paid)}>

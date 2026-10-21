@@ -9,7 +9,7 @@ export async function GET() {
   if (!isAdmin()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const { data, error } = await getSupabaseServerClient()
     .from("tickets")
-    .select("ticket_no, paid, paid_at, paid_amount, pay_method, chosen_methods, received_on, bank_memo, passed_on, passed_to, donor_id, donors(full_name, email, phone)")
+    .select("ticket_no, paid, paid_at, paid_amount, pay_method, chosen_methods, received_on, bank_memo, paid_by_name, paid_by_email, stripe_payment_id, passed_on, passed_to, donor_id, donors(full_name, email, phone)")
     .order("ticket_no");
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ tickets: data });
