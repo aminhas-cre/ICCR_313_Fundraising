@@ -8,7 +8,7 @@ export default function CampaignStory({ goal, price, goalAmount }: { goal: numbe
     >
       <h2 className="font-serif text-3xl font-bold text-emerald">Be One of the {goal}</h2>
       <p className="mt-3 rounded-xl border-l-4 border-emerald bg-sand p-4 text-base font-semibold text-emerald sm:text-lg">
-        We’re asking {goal} people to step up first with {fmt(price)} each. Together, that’s {fmt(goalAmount)} to keep our
+        ICCR is looking for {goal} people to step up first with {fmt(price)} each. Together, that’s {fmt(goalAmount)} to keep our
         masjid open and strong.
       </p>
 
