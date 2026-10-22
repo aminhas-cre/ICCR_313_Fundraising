@@ -9,5 +9,10 @@ export function getSupabaseServerClient() {
       "Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY."
     );
   }
-  return createClient(url, key, { auth: { persistSession: false } });
+  // Next.js caches fetch() responses by default, which made the tracker show stale pledge counts.
+  // Every database read must hit the database, so opt out of the cache for all Supabase calls.
+  return createClient(url, key, {
+    auth: { persistSession: false },
+    global: { fetch: (input, init) => fetch(input, { ...init, cache: "no-store" }) },
+  });
 }
