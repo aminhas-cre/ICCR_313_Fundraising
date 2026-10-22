@@ -19,7 +19,7 @@ export default function Thanks() {
             The best next step: gather 5 or more donations from your circle, and send each person their own ICCR number.
             Highly recommended.
           </p>
-          <Link className="btn-primary mt-3 w-full" href="/pledge?for=others">Pledge 5 or more for family &amp; friends</Link>
+          <Link className="btn-primary mt-3 w-full" href="/pledge?for=others">Pledge to invite family and friends</Link>
         </section>
       </main>
     </>
