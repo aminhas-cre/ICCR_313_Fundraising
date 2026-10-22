@@ -14,7 +14,7 @@ export default function PublicHeader({ wide = false }: { wide?: boolean }) {
             Donate Now
           </Link>
           <Link href="/pledge?for=others" className="btn-secondary flex-1 !px-4 !py-2 text-center leading-tight sm:flex-none">
-            Pledge for others to join the 313
+            Pledge to invite family and friends
           </Link>
         </nav>
       </div>

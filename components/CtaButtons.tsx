@@ -17,7 +17,7 @@ export default function CtaButtons({ price }: { price: number }) {
         className="block rounded-2xl border-2 border-emerald bg-white px-5 py-4 text-emerald shadow-sm transition hover:bg-sand-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald focus-visible:ring-offset-2"
       >
         <span className="text-xs font-bold uppercase tracking-wider text-gold-ink">Step 2 · Invite others to good</span>
-        <span className="block font-serif text-xl font-semibold">Pledge for family &amp; friends</span>
+        <span className="block font-serif text-xl font-semibold">Pledge to invite family and friends</span>
         <span className="mt-0.5 block text-sm text-ink/80">Bring your close ones in with you</span>
       </Link>
     </div>

@@ -145,7 +145,7 @@ export default function PledgeForm({ price, zelle, venmo, launchgood, cardEnable
             You&apos;ve taken care of yours. The most helpful thing you can do next is pledge for your family and
             friends and send each person their ICCR number. Highly recommended.
           </p>
-          <a className="btn-primary mt-3 w-full" href="/pledge?for=others">Pledge for family &amp; friends</a>
+          <a className="btn-primary mt-3 w-full" href="/pledge?for=others">Pledge to invite family and friends</a>
         </section>
       );
     return (

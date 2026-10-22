@@ -49,7 +49,7 @@ export function pledgeConfirmation(i: PledgeMailInput) {
     "",
     "DONATE FIRST, THEN BRING YOUR CLOSE ONES",
     "Please make your own donation first. Then, highly recommended: pledge tickets for your family and friends and send each person their ICCR number so they can pay it.",
-    `Pledge for family & friends: ${i.familyUrl}`,
+    `Pledge to invite family and friends: ${i.familyUrl}`,
     "",
     `Check which of your tickets are paid any time with your email: ${i.statusUrl}`,
     "",
@@ -71,7 +71,7 @@ export function pledgeConfirmation(i: PledgeMailInput) {
 <div style="background:#0f4a3c;color:#f6f1e7;border-radius:10px;padding:14px 16px;margin:16px 0">
 <p style="margin:0 0 6px"><b>Donate first, then bring your close ones</b></p>
 <p style="margin:0">Please make your own donation first. Then, <b>highly recommended</b>: pledge tickets for your family and friends and send each person their ICCR number so they can pay it.</p>
-<p style="margin:10px 0 0"><a style="color:#f6f1e7;font-weight:bold" href="${esc(i.familyUrl)}">Pledge for family &amp; friends</a></p>
+<p style="margin:10px 0 0"><a style="color:#f6f1e7;font-weight:bold" href="${esc(i.familyUrl)}">Pledge to invite family and friends</a></p>
 </div>
 <p>Check which of your tickets are paid any time with your email:<br><a href="${esc(i.statusUrl)}">${esc(i.statusUrl)}</a></p>
 <p>Share this page with family and friends:<br><a href="${esc(i.shareUrl)}">${esc(i.shareUrl)}</a><br>

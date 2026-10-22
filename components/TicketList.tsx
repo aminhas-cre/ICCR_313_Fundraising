@@ -54,7 +54,7 @@ export default function TicketList({ initial }: { initial: PledgeView }) {
           <div className="mt-5 rounded-xl border-2 border-emerald p-4 text-left">
             <p className="font-serif text-lg font-semibold text-emerald">Now pledge 5 or more from your family and friends</p>
             <p className="mt-1 text-sm text-ink/80">Gather 5 or more donations from your circle and send each person their own ICCR number.</p>
-            <a className="btn-primary mt-3 w-full" href="/pledge?for=others">Pledge 5 or more for family &amp; friends</a>
+            <a className="btn-primary mt-3 w-full" href="/pledge?for=others">Pledge to invite family and friends</a>
           </div>
         )}
         {unpaid > 0 && initial.card_enabled && (
