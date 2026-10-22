@@ -1,13 +1,11 @@
 import { formatTicket } from "./tickets";
-
-const esc = (s: string) =>
-  s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+import { baseUrl, button, callout, emailShell, esc } from "./emailLayout";
 const money = (n: number) => `$${n.toLocaleString("en-US")}`;
 const list = (nums: number[]) => nums.map(formatTicket).join(", ");
 const firstName = (n: string) => n.trim().split(/\s+/)[0] || n;
 
-const wrap = (inner: string) =>
-  `<div style="font-family:Arial,sans-serif;max-width:560px;margin:auto;color:#1c2420;line-height:1.5">${inner}</div>`;
+const wrap = (heading: string, preheader: string, inner: string) =>
+  emailShell({ heading, preheader, body: inner, footerName: "Islamic Center of Castle Rock", footerEin: "99-2085129" });
 
 export interface PledgeMailInput {
   name: string;
@@ -57,7 +55,7 @@ export function pledgeConfirmation(i: PledgeMailInput) {
     "Every person you bring in multiplies your reward, in sha Allah.",
   ].join("\n");
 
-  const html = wrap(`
+  const html = wrap("Your pledge is in", `${total} pledge${total === 1 ? "" : "s"} saved. Here are your ICCR numbers.`, `
 <p>Assalamu Alaikum ${esc(firstName(i.name))},</p>
 <p>JazakAllahu khayran. You are now signed up for <b>${total} ticket${total === 1 ? "" : "s"}</b> in the 313.</p>
 <p style="margin:16px 0"><b>Your tickets:</b> ${esc(list(i.allTickets))}<br>
@@ -105,7 +103,7 @@ export function adminPledgeAlert(i: AdminAlertInput) {
     `Campaign total: ${i.pledgedSoFar} of ${i.goal} tickets pledged.`,
     `Manage tickets: ${i.adminUrl}`,
   ].join("\n");
-  const html = wrap(`
+  const html = wrap("New pledge", `${i.name} pledged ${i.newTickets.length}`, `
 <p><b>${esc(i.name)}</b> just pledged <b>${i.newTickets.length}</b> ticket${i.newTickets.length === 1 ? "" : "s"}.</p>
 <p><b>New tickets:</b> ${esc(list(i.newTickets))}<br>
 <b>Total held by this person:</b> ${i.totalHeld}<br>
@@ -114,5 +112,58 @@ export function adminPledgeAlert(i: AdminAlertInput) {
 <b>Plans to pay by:</b> ${esc(i.chosenMethods.length ? i.chosenMethods.join(", ") : "(not chosen)")}</p>
 <p>Campaign total: <b>${i.pledgedSoFar}</b> of ${i.goal} tickets pledged.</p>
 <p><a href="${esc(i.adminUrl)}">Open the admin tickets page</a></p>`);
+  return { subject, text, html };
+}
+
+export interface ReminderInput {
+  name: string;
+  unpaid: number[]; // this person's unpaid ICCR numbers
+  price: number;
+  zelleEmail: string;
+  venmoHandle: string;
+  launchgoodUrl: string;
+  cardEnabled: boolean;
+}
+
+// For people who pledged but have not donated yet.
+export function pledgeReminder(i: ReminderInput) {
+  const base = baseUrl();
+  const n = i.unpaid.length;
+  const total = money(n * i.price);
+  const checkUrl = `${base}/status`;
+  const payUrl = `${base}/pay?t=${i.unpaid.join(",")}`;
+  const example = formatTicket(i.unpaid[0]);
+  const subject = `Your ICCR 313 pledge${n === 1 ? "" : "s"}: ${list(i.unpaid)}`;
+
+  const text = [
+    `Assalamu Alaikum ${firstName(i.name)},`,
+    "",
+    `JazakAllahu khayran for pledging to the 313. Your ICCR number${n === 1 ? " is" : "s are"} still waiting for the donation: ${list(i.unpaid)} (${total}).`,
+    "",
+    "HOW TO GIVE",
+    ...(i.cardEnabled ? [`Card, Apple Pay or debit: ${payUrl}`] : []),
+    `Zelle: ${i.zelleEmail} (put ${example} in the memo)`,
+    ...(i.venmoHandle ? [`Venmo: @${i.venmoHandle} (put ${example} in the note)`] : []),
+    ...(i.launchgoodUrl ? [`LaunchGood: ${i.launchgoodUrl} (use the email you pledged with)`] : []),
+    "",
+    "Already sent it? Thank you. Payments by Zelle and Venmo are matched by hand, so it can take a day or two to show.",
+    `Check your pledges any time: ${checkUrl}`,
+  ].join("\n");
+
+  const payLines = [
+    `<b>Zelle:</b> ${esc(i.zelleEmail)} (put <b>${esc(example)}</b> in the memo)`,
+    ...(i.venmoHandle ? [`<b>Venmo:</b> @${esc(i.venmoHandle)} (put <b>${esc(example)}</b> in the note)`] : []),
+    ...(i.launchgoodUrl ? [`<b>LaunchGood:</b> <a href="${esc(i.launchgoodUrl)}">give here</a> (use the email you pledged with)`] : []),
+  ].join("<br>");
+
+  const html = wrap("Your ICCR numbers are waiting", `${n} pledge${n === 1 ? "" : "s"} (${total}) still open. It takes a minute.`, `
+<p style="margin:0 0 8px">Assalamu Alaikum ${esc(firstName(i.name))},</p>
+<p style="margin:0">JazakAllahu khayran for pledging to the 313. Your donation is the last step, in sha Allah.</p>
+${callout(`<b>${esc(list(i.unpaid))}</b><br>${esc(total)} · ${n} pledge${n === 1 ? "" : "s"} still open`)}
+${i.cardEnabled ? button(`Give ${total} by card or Apple Pay`, payUrl) : ""}
+<p style="margin:12px 0 4px"><b>Or by:</b></p>
+<p style="margin:0 0 16px;font-size:15px">${payLines}</p>
+<p style="margin:0 0 12px;font-size:14px;color:#5a635e">Already sent it? Thank you. Zelle and Venmo are matched by hand, so it can take a day or two to show.</p>
+${button("Check my pledges", checkUrl, "light")}`);
   return { subject, text, html };
 }
