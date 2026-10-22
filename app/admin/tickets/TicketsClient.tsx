@@ -35,6 +35,7 @@ export default function TicketsClient() {
   const [q, setQ] = useState("");
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [busy, setBusy] = useState(false);
+  const [remind, setRemind] = useState<{ people: number; pledges: number; skippedRecent: number; emailConfigured: boolean; cooldownDays: number } | null>(null);
 
   const load = useCallback(async () => {
     const [t, e] = await Promise.all([fetch("/api/tickets"), fetch("/api/tickets/events")]);
@@ -88,12 +89,31 @@ export default function TicketsClient() {
     load();
   }
 
+  async function openReminders() {
+    setMsg(null);
+    const r = await fetch("/api/admin/reminders");
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) return setMsg({ ok: false, text: j.error ?? "Could not load reminders" });
+    setRemind(j);
+  }
+  async function sendReminders() {
+    setBusy(true);
+    const r = await fetch("/api/admin/reminders", { method: "POST" });
+    const j = await r.json().catch(() => ({}));
+    setBusy(false);
+    setRemind(null);
+    if (!r.ok) return setMsg({ ok: false, text: j.error ?? "Could not send reminders" });
+    setMsg({ ok: j.failed === 0, text: `${j.sent} reminder email(s) sent${j.failed ? ` · ${j.failed} failed` : ""}` });
+    load();
+  }
+
   return (
     <main className="mx-auto max-w-5xl px-4 py-8">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h1 className="font-serif text-3xl font-bold text-emerald">Tickets</h1>
         <div className="flex gap-2">
           <a className="btn-secondary" href="/admin">Pledgers</a>
+          <button className="btn-secondary" onClick={openReminders} disabled={busy}>Send reminders</button>
           <a className="btn-secondary" href="/api/export">Export CSV</a>
         </div>
       </div>
@@ -103,6 +123,23 @@ export default function TicketsClient() {
       </p>
       {emailOn === false && (
         <p className="mt-2 rounded-xl bg-sand-dark p-3 text-xs">Email isn&apos;t set up yet, so receipts won&apos;t be sent when you mark tickets paid. Tickets still update.</p>
+      )}
+
+      {remind && (
+        <section className="mt-4 rounded-2xl border-2 border-emerald bg-white p-5" aria-label="Send reminders">
+          <h2 className="font-serif text-xl font-semibold text-emerald">Remind people who pledged but haven&apos;t donated</h2>
+          <p className="mt-2 text-sm">
+            This will email <b>{remind.people}</b> {remind.people === 1 ? "person" : "people"} about <b>{remind.pledges}</b> unpaid pledge(s).
+            {remind.skippedRecent > 0 && <> Skipping {remind.skippedRecent} reminded in the last {remind.cooldownDays} days.</>}
+          </p>
+          {!remind.emailConfigured && <p className="mt-2 text-sm text-red-700">Email isn&apos;t set up, so nothing can be sent.</p>}
+          <div className="mt-3 flex gap-2">
+            <button className="btn-primary" disabled={busy || remind.people === 0 || !remind.emailConfigured} onClick={sendReminders}>
+              {busy ? "Sending…" : `Send to ${remind.people}`}
+            </button>
+            <button className="btn-secondary" onClick={() => setRemind(null)} disabled={busy}>Cancel</button>
+          </div>
+        </section>
       )}
 
       <section className="mt-6 rounded-2xl bg-white p-5 shadow-sm" aria-label="Mark tickets paid">

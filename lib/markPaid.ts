@@ -78,8 +78,12 @@ export async function markTickets(
       d.nums.push(n);
       byDonor.set(t.donor_id, d);
     }
+    // Each donor's full picture (after the update) for the "your pledges" line in the receipt.
+    const { data: held } = await sb.from("tickets").select("ticket_no, paid, donor_id").in("donor_id", [...byDonor.keys()]);
+    const mine = (id: string) => (held ?? []).filter((t: any) => t.donor_id === id);
     const results = await Promise.all(
-      [...byDonor.values()]
+      [...byDonor.entries()]
+        .map(([id, d]) => ({ ...d, id }))
         .filter((d) => d.email)
         .map((d) =>
           sendEmail({
@@ -93,6 +97,10 @@ export async function markTickets(
               legal_name: cfg.legal_name,
               ein: cfg.ein,
               receipt_statement: cfg.receipt_statement,
+              paidByName: opts.paidBy?.name ?? null,
+              reference: opts.stripePaymentId ?? null,
+              paidTotal: mine(d.id).filter((t: any) => t.paid).length,
+              stillOpen: mine(d.id).filter((t: any) => !t.paid).map((t: any) => formatTicket(t.ticket_no)),
             }),
           })
         )
