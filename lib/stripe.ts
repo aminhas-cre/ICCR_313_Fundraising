@@ -71,3 +71,29 @@ export function verifyWebhook(raw: string, header: string | null, secret: string
     return a.length === b.length && timingSafeEqual(a, b);
   });
 }
+
+// $1 live-test gift: not tied to any ICCR number (no `tickets` metadata), flagged `test` for the webhook.
+export async function createTestGiftSession(successUrl: string, cancelUrl: string): Promise<{ id: string; url: string }> {
+  const f = new URLSearchParams();
+  f.set("mode", "payment");
+  f.set("success_url", successUrl);
+  f.set("cancel_url", cancelUrl);
+  f.set("line_items[0][quantity]", "1");
+  f.set("line_items[0][price_data][currency]", "usd");
+  f.set("line_items[0][price_data][unit_amount]", "100");
+  f.set("line_items[0][price_data][product_data][name]", "ICCR 313 test gift");
+  f.set("metadata[test]", "1");
+  f.set("payment_intent_data[metadata][test]", "1");
+  f.set("payment_intent_data[description]", "ICCR 313 test gift ($1)");
+  const res = await fetch(`${API()}/v1/checkout/sessions`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}`, "Content-Type": "application/x-www-form-urlencoded" },
+    body: f,
+  });
+  const j: any = await res.json().catch(() => ({}));
+  if (!res.ok || !j.url) {
+    console.error("Stripe test gift error", res.status, j?.error?.message);
+    throw new Error("stripe_checkout_failed");
+  }
+  return { id: j.id, url: j.url };
+}

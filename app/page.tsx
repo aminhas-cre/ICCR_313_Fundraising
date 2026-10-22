@@ -5,6 +5,7 @@ import Thermometer from "@/components/Thermometer";
 import CampaignStory from "@/components/CampaignStory";
 import CtaButtons from "@/components/CtaButtons";
 import PayOptions from "@/components/PayOptions";
+import TestGift from "@/components/TestGift";
 import { getStats } from "@/lib/stats";
 import { getSettings } from "@/lib/settings";
 
@@ -127,6 +128,7 @@ export default async function Home() {
 
       <footer className="mt-12 text-center text-xs text-ink/60">
         Islamic Center of Castle Rock · <Link className="underline" href="/admin">Committee</Link>
+        <TestGift />
       </footer>
     </>
   );
