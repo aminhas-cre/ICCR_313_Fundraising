@@ -48,12 +48,12 @@ export default function PayChoice({
       <p className="mt-1 text-sm text-ink/80">Tick the way you plan to pay so we can keep track. You pay after you pledge.</p>
       <div className="mt-3 space-y-3">
         <Card {...card("zelle")} title="Zelle" badge="We suggest this">
-          <p className="mb-1 text-sm text-ink/80">No fees, so 100% of your gift reaches ICCR.</p>
+          <p className="mb-1 text-sm text-ink/80">No fees, so 100% of your donation reaches ICCR.</p>
           <PayOptions zelle={zelle} venmo={venmo} show="zelle" example="ICCR-2" noun="pledge" />
         </Card>
         {venmo && (
           <Card {...card("venmo")} title="Venmo" badge="We suggest this">
-            <p className="mb-1 text-sm text-ink/80">No fees, so 100% of your gift reaches ICCR.</p>
+            <p className="mb-1 text-sm text-ink/80">No fees, so 100% of your donation reaches ICCR.</p>
             <PayOptions zelle={zelle} venmo={venmo} show="venmo" example="ICCR-2" noun="pledge" />
           </Card>
         )}

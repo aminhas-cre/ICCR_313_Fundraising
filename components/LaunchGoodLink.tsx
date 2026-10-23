@@ -1,4 +1,4 @@
-// "Give through LaunchGood": external donation page. We match the gift to a ticket by hand, like Zelle.
+// "Give through LaunchGood": external donation page. We match the donation to a ticket by hand, like Zelle.
 export default function LaunchGoodLink({ url, price, tone = "light", noun = "ticket" }: { url: string; price: number; tone?: "light" | "dark"; noun?: string }) {
   if (!url) return null;
   const dark = tone === "dark";
@@ -19,7 +19,7 @@ export default function LaunchGoodLink({ url, price, tone = "light", noun = "tic
         <li>Use the same email you pledged with.</li>
         <li>If there&apos;s a comment box, add your {noun} number (like ICCR-12).</li>
       </ul>
-      <p className={`mt-1 text-xs ${dark ? "text-sand/80" : "text-ink/70"}`}>We match LaunchGood gifts to {noun}s by hand, so it can take a day or two to show.</p>
+      <p className={`mt-1 text-xs ${dark ? "text-sand/80" : "text-ink/70"}`}>We match LaunchGood donations to {noun}s by hand, so it can take a day or two to show.</p>
     </div>
   );
 }

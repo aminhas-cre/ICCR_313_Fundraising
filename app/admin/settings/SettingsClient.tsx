@@ -95,7 +95,7 @@ export default function SettingsClient() {
         <section className="space-y-4 rounded-2xl bg-white p-5 shadow-sm">
           <h2 className="font-serif text-xl font-semibold text-emerald">Offline adjustments</h2>
           <p className="text-sm text-ink/70">
-            Added on top of the donors you log. Use for cash, checks, or gifts you don&apos;t want to enter one by one.
+            Added on top of the donors you log. Use for cash, checks, or donations you don&apos;t want to enter one by one.
             Donor totals are never changed.
           </p>
           <div className="grid gap-4 sm:grid-cols-2">

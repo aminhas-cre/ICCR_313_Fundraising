@@ -19,7 +19,7 @@ export interface Settings {
 }
 
 export const DEFAULT_RECEIPT_STATEMENT =
-  "{legal_name} (EIN {ein}) is a 501(c)(3) tax-exempt organization. No goods or services were provided in exchange for this gift. Please keep this receipt for your records.";
+  "{legal_name} (EIN {ein}) is a 501(c)(3) tax-exempt organization. No goods or services were provided in exchange for this donation. Please keep this receipt for your records.";
 
 export const DEFAULT_SETTINGS: Settings = {
   goal_donors: GOAL_DONORS,
