@@ -5,7 +5,7 @@ const list = (nums: number[]) => nums.map(formatTicket).join(", ");
 const firstName = (n: string) => n.trim().split(/\s+/)[0] || n;
 
 const wrap = (heading: string, preheader: string, inner: string) =>
-  emailShell({ heading, preheader, body: inner, footerName: "Islamic Center of Castle Rock", footerEin: "99-2085129" });
+  emailShell({ heading, preheader, body: inner, footerName: "Islamic Center of Castle Rock" });
 
 export interface PledgeMailInput {
   name: string;

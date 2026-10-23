@@ -52,8 +52,7 @@ export function buildReceipt(r: ReceiptInput) {
     "",
     statement,
     "",
-    r.legal_name,
-    `EIN ${r.ein}`,
+    `${r.legal_name}, a 501(c)(3) nonprofit organization`,
     "",
     ...(statusLine ? [statusLine] : []),
     `Check your pledges any time: ${checkUrl}`,
@@ -64,7 +63,6 @@ export function buildReceipt(r: ReceiptInput) {
     preheader: `We received your ${amount} donation. JazakAllahu khayran.`,
     heading: "Donation received. JazakAllahu khayran.",
     footerName: r.legal_name,
-    footerEin: r.ein,
     body: `<p style="margin:0 0 8px">Assalamu Alaikum ${esc(r.name)},</p>
 <p style="margin:0">We have received your donation to ICCR 313. May Allah accept it from you. Please keep this email as your receipt.</p>
 ${detailRows(rows)}
