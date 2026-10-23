@@ -22,7 +22,7 @@ export function buildReceipt(r: ReceiptInput) {
   const statement = r.receipt_statement.replaceAll("{legal_name}", r.legal_name).replaceAll("{ein}", r.ein);
   const amount = `$${r.amount.toLocaleString("en-US")}`;
   const tickets = r.tickets.join(", ");
-  const subject = `Your gift receipt: ${tickets}`;
+  const subject = `Your donation receipt: ${tickets}`;
   const site = (r.siteUrl ?? baseUrl()).replace(/\/$/, "");
   const checkUrl = `${site}/status`;
   const familyUrl = `${site}/pledge?for=others`;
@@ -46,14 +46,13 @@ export function buildReceipt(r: ReceiptInput) {
   const text = [
     `Assalamu Alaikum ${r.name},`,
     "",
-    "JazakAllahu khayran. We have received your gift.",
+    "JazakAllahu khayran. We have received your donation.",
     "",
     ...rows.map(([k, v]) => `${k}: ${v}`),
     "",
     statement,
     "",
-    r.legal_name,
-    `EIN ${r.ein}`,
+    `${r.legal_name}, a 501(c)(3) nonprofit organization`,
     "",
     ...(statusLine ? [statusLine] : []),
     `Check your pledges any time: ${checkUrl}`,
@@ -61,12 +60,11 @@ export function buildReceipt(r: ReceiptInput) {
   ].join("\n");
 
   const html = emailShell({
-    preheader: `We received your ${amount} gift. JazakAllahu khayran.`,
-    heading: "Gift received. JazakAllahu khayran.",
+    preheader: `We received your ${amount} donation. JazakAllahu khayran.`,
+    heading: "Donation received. JazakAllahu khayran.",
     footerName: r.legal_name,
-    footerEin: r.ein,
     body: `<p style="margin:0 0 8px">Assalamu Alaikum ${esc(r.name)},</p>
-<p style="margin:0">We have received your gift to ICCR 313. May Allah accept it from you. Please keep this email as your receipt.</p>
+<p style="margin:0">We have received your donation to ICCR 313. May Allah accept it from you. Please keep this email as your receipt.</p>
 ${detailRows(rows)}
 <p style="margin:0 0 16px;font-size:13px;color:#5a635e">${esc(statement)}</p>
 ${statusLine ? callout(esc(statusLine)) : ""}

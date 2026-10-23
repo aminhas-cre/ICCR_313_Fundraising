@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 
-// Hidden $1 live-test gift: proves checkout, webhook and email work. Touches no pledge.
+// Hidden $1 live-test donation: proves checkout, webhook and email work. Touches no pledge.
 export default function TestGift() {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
@@ -25,7 +25,7 @@ export default function TestGift() {
       <summary className="cursor-pointer list-none text-xs">Testing</summary>
       <div className="mt-2">
         <button type="button" className="btn-secondary" onClick={go} disabled={busy}>
-          {busy ? "Opening…" : "Give $1 test gift"}
+          {busy ? "Opening…" : "Give $1 test donation"}
         </button>
         {err && <p role="alert" className="mt-1 text-xs text-red-700">{err}</p>}
       </div>

@@ -9,7 +9,7 @@ export default function Thanks({ searchParams }: { searchParams: { test?: string
       <>
         <PublicHeader />
         <main className="mx-auto max-w-xl px-4 py-12 text-center">
-          <h1 className="font-serif text-4xl font-bold text-emerald">Test gift received</h1>
+          <h1 className="font-serif text-4xl font-bold text-emerald">Test donation received</h1>
           <p className="mt-3 text-ink/80">
             JazakAllahu khayran. Check your email for the receipt and your Stripe dashboard for the payment. No pledge was changed.
           </p>

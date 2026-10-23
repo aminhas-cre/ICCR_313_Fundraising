@@ -34,14 +34,14 @@ export async function POST(req: Request) {
   const s = event.data?.object ?? {};
   if (s.payment_status !== "paid") return NextResponse.json({ ok: true, ignored: "not paid yet" });
 
-  // $1 test gift: real money, but not tied to any pledge. Email a receipt + alert and stop.
+  // $1 test donation: real money, but not tied to any pledge. Email a receipt + alert and stop.
   if (s.metadata?.test === "1") {
     const cfg = await getSettings();
     const payer = s.customer_details?.email as string | undefined;
     const ref = typeof s.payment_intent === "string" ? s.payment_intent : s.id;
     const receipt = buildReceipt({
       name: s.customer_details?.name ?? "Friend",
-      tickets: ["Test gift"],
+      tickets: ["Test donation"],
       amount: Math.round((s.amount_total ?? 100) / 100),
       method: "card",
       received_on: new Date().toISOString().slice(0, 10),
@@ -55,7 +55,7 @@ export async function POST(req: Request) {
       payer ? sendEmail({ to: payer, ...receipt }) : Promise.resolve(),
       sendEmail({
         to: cfg.admin_notify_email,
-        subject: "ICCR 313 test gift received ($1)",
+        subject: "ICCR 313 test donation received ($1)",
         text: `Stripe checkout, webhook and email all work. Payment ${ref}${payer ? ` from ${payer}` : ""}. No pledge was changed.`,
         html: `<p>Stripe checkout, webhook and email all work.</p><p>Payment <b>${ref}</b>${payer ? ` from ${payer}` : ""}. No pledge was changed.</p>`,
       }),

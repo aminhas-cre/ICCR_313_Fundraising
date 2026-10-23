@@ -19,7 +19,7 @@ export function button(label: string, url: string, tone: "primary" | "light" = "
   return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:8px 0"><tr><td style="background:${bg};border-radius:10px"><a href="${esc(url)}" style="display:inline-block;padding:13px 22px;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;color:${fg};text-decoration:none">${esc(label)}</a></td></tr></table>`;
 }
 
-export function emailShell(o: { preheader: string; heading: string; body: string; footerName: string; footerEin?: string }) {
+export function emailShell(o: { preheader: string; heading: string; body: string; footerName: string }) {
   const site = baseUrl();
   return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;padding:0;background:${SAND}">
@@ -35,7 +35,7 @@ export function emailShell(o: { preheader: string; heading: string; body: string
 ${o.body}
 </td></tr>
 <tr><td style="background:${SAND};padding:18px 28px;font-family:Arial,sans-serif;font-size:12px;line-height:1.5;color:#5a635e">
-${esc(o.footerName)}${o.footerEin ? ` · EIN ${esc(o.footerEin)}` : ""}<br>
+${esc(o.footerName)} &middot; a 501(c)(3) nonprofit organization<br>
 <a href="${esc(site)}" style="color:${EMERALD}">${esc(site.replace(/^https?:\/\//, ""))}</a>
 </td></tr>
 </table></td></tr></table></body></html>`;
