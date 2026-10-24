@@ -1,5 +1,6 @@
 import Link from "next/link";
 import PublicHeader from "@/components/PublicHeader";
+import ShareFooter from "@/components/ShareFooter";
 
 export const metadata = { title: "Thank you | ICCR 313", robots: { index: false, follow: false } };
 
@@ -14,6 +15,7 @@ export default function Thanks({ searchParams }: { searchParams: { test?: string
             JazakAllahu khayran. Check your email for the receipt and your Stripe dashboard for the payment. No pledge was changed.
           </p>
         </main>
+        <ShareFooter />
       </>
     );
   }
@@ -35,6 +37,7 @@ export default function Thanks({ searchParams }: { searchParams: { test?: string
           <Link className="btn-primary mt-3 w-full" href="/pledge?for=others">Pledge to invite family and friends</Link>
         </section>
       </main>
+      <ShareFooter />
     </>
   );
 }

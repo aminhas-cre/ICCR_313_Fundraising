@@ -1,4 +1,5 @@
 import PublicHeader from "@/components/PublicHeader";
+import ShareFooter from "@/components/ShareFooter";
 import StatusLookup from "./StatusLookup";
 
 export const metadata = { title: "Check my pledge | ICCR 313" };
@@ -14,6 +15,7 @@ export default function StatusPage() {
         </p>
         <StatusLookup />
       </main>
+      <ShareFooter />
     </>
   );
 }

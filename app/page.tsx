@@ -1,6 +1,6 @@
 import Link from "next/link";
 import PublicHeader from "@/components/PublicHeader";
-import ShareButtons from "@/components/ShareButtons";
+import ShareFooter from "@/components/ShareFooter";
 import Thermometer from "@/components/Thermometer";
 import CampaignStory from "@/components/CampaignStory";
 import CtaButtons from "@/components/CtaButtons";
@@ -108,12 +108,6 @@ export default async function Home() {
         )}
       </section>
 
-      <section className="mt-8 rounded-2xl bg-white p-6 shadow-sm sm:p-8">
-        <h2 className="font-serif text-2xl font-semibold text-emerald">Spread the word</h2>
-        <p className="mt-1 text-sm text-ink/80">Every person you bring in multiplies your reward, in sha Allah.</p>
-        <div className="mt-3"><ShareButtons /></div>
-      </section>
-
       <section className="mt-8" aria-label="Frequently asked questions">
         <h2 className="font-serif text-2xl font-semibold text-emerald">Questions</h2>
         <div className="mt-3 divide-y divide-sand-dark rounded-2xl bg-white shadow-sm">
@@ -126,7 +120,9 @@ export default async function Home() {
         </div>
       </section>
 
-      <footer className="mt-12 text-center text-xs text-ink/60">
+      <div className="-mx-4 mt-8"><ShareFooter /></div>
+
+      <footer className="mt-4 text-center text-xs text-ink/60">
         Islamic Center of Castle Rock · <Link className="underline" href="/admin">Committee</Link>
         <TestGift />
       </footer>
