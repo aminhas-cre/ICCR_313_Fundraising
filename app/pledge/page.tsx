@@ -1,4 +1,5 @@
 import PublicHeader from "@/components/PublicHeader";
+import ShareFooter from "@/components/ShareFooter";
 import { getSettings } from "@/lib/settings";
 import { getSupabaseServerClient } from "@/lib/supabase";
 import PledgeForm from "./PledgeForm";
@@ -63,6 +64,7 @@ export default async function PledgePage({ searchParams }: { searchParams: { pay
           </p>
         )}
       </main>
+      <ShareFooter />
     </>
   );
 }

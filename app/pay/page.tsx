@@ -1,4 +1,5 @@
 import PublicHeader from "@/components/PublicHeader";
+import ShareFooter from "@/components/ShareFooter";
 import PayClient from "./PayClient";
 
 export const dynamic = "force-dynamic";
@@ -16,6 +17,7 @@ export default function PayPage({ searchParams }: { searchParams: { t?: string; 
         {searchParams.canceled && <p className="mt-3 rounded-xl bg-sand-dark p-3 text-sm">No problem, your payment wasn&apos;t completed. You can try again below.</p>}
         <PayClient initial={typeof searchParams.t === "string" ? searchParams.t.slice(0, 200) : ""} />
       </main>
+      <ShareFooter />
     </>
   );
 }

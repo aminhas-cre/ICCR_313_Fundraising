@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import ShareButtons from "@/components/ShareButtons";
 import PayOptions from "@/components/PayOptions";
 import LaunchGoodLink from "@/components/LaunchGoodLink";
 import CardButton from "@/components/CardButton";
@@ -170,11 +169,6 @@ export default function PledgeForm({ price, zelle, venmo, launchgood, cardEnable
         {payBlock}
         {nudge}
         <Link className="btn-secondary w-full" href="/status">Check my pledge</Link>
-        <section className="rounded-2xl bg-white p-5 shadow-sm">
-          <h2 className="font-serif text-xl font-semibold text-emerald">Share with family and friends</h2>
-          <p className="mt-1 text-sm text-ink/80">Every person you bring in multiplies your reward, in sha Allah.</p>
-          <div className="mt-3"><ShareButtons /></div>
-        </section>
       </div>
     );
   }
