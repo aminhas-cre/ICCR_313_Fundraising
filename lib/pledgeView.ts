@@ -2,13 +2,14 @@ import { getSupabaseServerClient } from "./supabase";
 import { getSettings } from "./settings";
 import { stripeConfigured } from "./stripe";
 import type { PledgeView } from "./types";
+import { countsAsPaid } from "./paidState";
 
 async function build(donor: { id: string; full_name: string; access_token: string }): Promise<PledgeView> {
   const sb = getSupabaseServerClient();
   const [{ data: rows }, cfg] = await Promise.all([
     sb
       .from("tickets")
-      .select("ticket_no, paid, received_on, passed_on, passed_to")
+      .select("ticket_no, paid, chosen_methods, received_on, passed_on, passed_to")
       .eq("donor_id", donor.id)
       .order("ticket_no"),
     getSettings(),
@@ -23,7 +24,8 @@ async function build(donor: { id: string; full_name: string; access_token: strin
     card_enabled: stripeConfigured(),
     tickets: (rows ?? []).map((t) => ({
       no: t.ticket_no,
-      paid: t.paid,
+      paid: countsAsPaid(t),
+      verified: t.paid,
       received_on: t.received_on,
       passed_on: t.passed_on,
       passed_to: t.passed_to,

@@ -1,5 +1,6 @@
 import { getSupabaseServerClient } from "./supabase";
 import type { Settings } from "./settings";
+import { countsAsPaid } from "./paidState";
 
 export interface Stats {
   goalTickets: number;
@@ -7,7 +8,8 @@ export interface Stats {
   issued: number; // ticket numbers handed out so far
   numbersLeft: number;
   pledgedTickets: number; // everything pledged, paid or not
-  paidTickets: number;
+  paidTickets: number; // shown as Paid: verified + chosen Zelle/Venmo/LaunchGood
+  verifiedPaidTickets: number; // confirmed by Stripe or the committee
   pledgedAmount: number; // includes paid
   paidAmount: number;
   supporters: { name: string; count: number }[];
@@ -22,7 +24,7 @@ export function shortName(full: string) {
 export async function getStats(s: Settings): Promise<Stats> {
   const sb = getSupabaseServerClient();
   const [t, d] = await Promise.all([
-    sb.from("tickets").select("donor_id, paid, created_at"),
+    sb.from("tickets").select("donor_id, paid, chosen_methods, created_at"),
     sb.from("donors").select("id, full_name, show_public"),
   ]);
   if (t.error) throw t.error;
@@ -30,7 +32,8 @@ export async function getStats(s: Settings): Promise<Stats> {
   const tickets = t.data ?? [];
 
   const issued = tickets.length;
-  const paidCount = tickets.filter((x) => x.paid).length;
+  const paidCount = tickets.filter((x) => countsAsPaid(x)).length;
+  const verifiedCount = tickets.filter((x) => x.paid).length;
 
   // Offline adjustments (cash, etc.) count toward both thermometers.
   const paidAmount = paidCount * s.ticket_price + s.adjust_paid_amount;
@@ -58,6 +61,7 @@ export async function getStats(s: Settings): Promise<Stats> {
     numbersLeft: Math.max(0, s.goal_donors - issued),
     pledgedTickets: Math.floor(pledgedAmount / s.ticket_price),
     paidTickets: Math.floor(paidAmount / s.ticket_price),
+    verifiedPaidTickets: verifiedCount,
     pledgedAmount,
     paidAmount,
     supporters,
