@@ -61,6 +61,7 @@ export default function TicketsClient() {
   }, [parsed, byNo]);
 
   const paidCount = rows.filter((r) => r.paid).length;
+  const byChoiceCount = rows.filter((r) => !r.paid && (r.chosen_methods ?? []).some((m) => ["zelle", "venmo", "launchgood"].includes(m))).length;
   const shown = rows.filter((r) => {
     if (filter === "paid" && !r.paid) return false;
     if (filter === "unpaid" && r.paid) return false;
@@ -118,8 +119,9 @@ export default function TicketsClient() {
         </div>
       </div>
       <p className="mt-2 text-sm text-ink/80">
-        <b>{rows.length}</b> pledged · <b>{paidCount}</b> paid · <b>{rows.length - paidCount}</b> awaiting payment. Check the
-        bank, find the ticket number in each memo, and mark it paid here.
+        <b>{rows.length}</b> pledged · <b>{paidCount}</b> verified paid (Stripe or marked here) · <b>{byChoiceCount}</b> shown as Paid
+        by choice (Zelle/Venmo/LaunchGood, not confirmed yet). Check the bank, find the ticket number in each memo, and mark it
+        paid here to confirm it and send the receipt.
       </p>
       {emailOn === false && (
         <p className="mt-2 rounded-xl bg-sand-dark p-3 text-xs">Email isn&apos;t set up yet, so receipts won&apos;t be sent when you mark tickets paid. Tickets still update.</p>

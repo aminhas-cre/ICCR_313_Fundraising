@@ -32,7 +32,8 @@ export interface Ticket {
 // What a pledger is allowed to see about their own tickets.
 export interface PledgeTicket {
   no: number;
-  paid: boolean;
+  paid: boolean; // shown as Paid (see lib/paidState.ts)
+  verified: boolean; // confirmed by Stripe or the committee
   received_on: string | null;
   passed_on: boolean;
   passed_to: string | null;

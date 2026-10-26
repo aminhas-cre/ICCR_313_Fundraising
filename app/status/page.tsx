@@ -11,7 +11,7 @@ export default function StatusPage() {
       <main className="mx-auto max-w-xl px-4 py-10">
         <h1 className="font-serif text-3xl font-bold text-emerald">Check my pledge</h1>
         <p className="mt-2 text-sm text-ink/80">
-          Enter the email you pledged with to see each of your tickets and whether it has been paid.
+          Enter the email you pledged with to see each of your tickets and their status. Zelle, Venmo and LaunchGood pledges show as Paid, and the committee confirms them against the bank.
         </p>
         <StatusLookup />
       </main>

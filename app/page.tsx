@@ -25,7 +25,7 @@ export default async function Home() {
     ["Who should I pledge for?", `Start with yourself: make your own donation. Then pledge tickets for your family and friends. Each ticket has its own ICCR number, so you can send a person their number and they pay that exact ticket. Bringing your close ones in is what makes this work.`],
     ["How do I pay?", `Pledge online and you'll get your ICCR ticket numbers. Then send ${fmt(cfg.ticket_price)} per ticket by Zelle to ${cfg.zelle_email}${cfg.venmo_handle ? ` or Venmo @${cfg.venmo_handle}` : ""} and put the ticket number in the memo (or Venmo note). Both are free for ICCR.${cfg.launchgood_url ? ` You can also give ${fmt(cfg.ticket_price)} per ticket on our LaunchGood page (use the same email you pledged with).` : ""} We match payments by hand, so it can take a day or two to show.`],
     ["Does every ticket have its own number?", "Yes. If you pledge 5 tickets you get 5 numbers. You can pay for them yourself or give a ticket to someone else, like an uncle, who sends the Zelle or Venmo with that ticket's number in the memo."],
-    ["How do I know my pledge was paid?", "Use Check my pledge with your email. It lists each of your tickets and whether it's been paid."],
+    ["How do I know my pledge was paid?", "Use Check my pledge with your email. Pledges you give by Zelle, Venmo or LaunchGood show as Paid right away, and the committee confirms them against the bank. Card payments show as Paid as soon as they go through."],
     ["Where does the money go?", "A permanent prayer space, youth and community programs, Islamic education, and sadaqah jariyah that keeps giving long after us."],
   ];
 

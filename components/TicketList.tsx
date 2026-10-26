@@ -103,9 +103,14 @@ export default function TicketList({ initial }: { initial: PledgeView }) {
                     <path d="M8 13.2 4.8 10l-1.3 1.3L8 15.8l8.5-8.5-1.3-1.3z" />
                   </svg>
                 )}
-                {t.paid ? `Paid${t.received_on ? ` · ${t.received_on}` : ""}` : "Awaiting payment"}
+                {t.paid ? `Paid${t.verified && t.received_on ? ` · ${t.received_on}` : ""}` : "Awaiting payment"}
               </span>
             </div>
+            {t.paid && !t.verified && (
+              <p className="mt-2 text-xs text-ink/70">
+                Confirming with the bank. If you haven&apos;t sent it yet, put <b>{formatTicket(t.no)}</b> in your Zelle memo or Venmo note.
+              </p>
+            )}
             {!t.paid && initial.card_enabled && (
               <a className="mt-2 inline-block text-sm font-semibold text-emerald underline" href={`/pay?t=${t.no}`}>Pay this ticket by card</a>
             )}
